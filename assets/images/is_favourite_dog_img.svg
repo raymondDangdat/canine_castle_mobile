@@ -1,0 +1,18 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Frame 124" filter="url(#filter0_b_379_40681)">
+<rect width="24" height="24" rx="12" fill="#FBF5F0"/>
+<g id="vuesax/linear/heart">
+<g id="heart">
+<path id="Vector" d="M12.361 17.1394C12.1627 17.2094 11.836 17.2094 11.6377 17.1394C9.94602 16.5619 6.16602 14.1528 6.16602 10.0694C6.16602 8.26693 7.61852 6.80859 9.40935 6.80859C10.471 6.80859 11.4102 7.32193 11.9993 8.11526C12.5885 7.32193 13.5335 6.80859 14.5893 6.80859C16.3802 6.80859 17.8327 8.26693 17.8327 10.0694C17.8327 14.1528 14.0527 16.5619 12.361 17.1394Z" fill="#D89B65"/>
+</g>
+</g>
+</g>
+<defs>
+<filter id="filter0_b_379_40681" x="-25" y="-25" width="74" height="74" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feGaussianBlur in="BackgroundImageFix" stdDeviation="12.5"/>
+<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_379_40681"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_379_40681" result="shape"/>
+</filter>
+</defs>
+</svg>

@@ -1,0 +1,193 @@
+name: canine_castle_mobile
+description: A new Flutter project.
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.1.1 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
+
+  cached_network_image: ^3.2.3
+
+  step_progress_indicator: ^1.0.2
+  intl: ^0.18.0
+  permission_handler: ^10.2.0
+  #  file_picker: ^5.2.6
+  #  image_picker: ^0.8.7
+  iconsax: ^0.0.8
+  get: ^4.6.5
+  url_launcher: ^6.1.10
+  flutter_inappwebview: ^5.7.2+3
+  webview_flutter: ^4.0.7
+  provider: ^6.0.2
+  another_flushbar: ^1.10.29
+  #  fl_chart: ^0.62.0
+  flutter_native_splash:
+  color: #000000
+
+  #  FOR LOADING SVG IMAGES
+  flutter_svg: ^1.0.0
+
+  #  FOR LOCAL AUTHENTICATION SUCH AS FACEID AND FINGERPRINT
+  local_auth: ^2.1.6
+
+  #  For responsive screen sizzing
+  flutter_screenutil: ^5.5.3+2f
+
+  percent_indicator: ^4.0.1
+
+  carousel_slider: ^4.2.1
+
+  #  TO GENERATE QR CODE
+  qr_flutter: ^4.1.0
+
+  #  To show Toast Messages
+  fluttertoast: ^8.2.1
+
+  #  For sharing
+  share_plus:
+  top_snackbar_flutter: ^2.0.0
+
+  shared_preferences: ^2.0.13
+
+  hive_flutter:
+
+  # Package for OTP codes
+  pin_code_fields: ^8.0.1
+  http: ^0.13.4
+
+  #  STEP INDICATOR
+  easy_stepper: ^0.7.2
+
+  #  IMAGE PICKER FOR PICKING IMAGES
+  image_picker: ^0.8.7
+
+  camera: ^0.10.5+2
+  http_parser: ^4.0.2
+
+  #  flutter_camera_overlay: ^0.1.1
+  camera_android: ^0.10.8+4
+
+  #  JIFFY FOR DATE FORMATING
+  jiffy: ^6.2.1
+
+  #  FOR ANIMATED SLIDER
+  shimmer: ^3.0.0
+
+  #  For fetching contacts from user device
+  flutter_contacts: ^1.1.3
+
+  dots_indicator: ^3.0.0
+  simple_gradient_text: ^1.3.0
+
+  #  FOR PREVIEWING LIVE VIDEO
+  #  video_player: ^2.2.6
+  video_player: ^2.6.1
+
+  # For API requests, especially downloads
+  dio: ^5.3.3
+
+  # Path to file to download
+  path_provider: ^2.1.1
+
+  # TO open downloaded files
+  open_file: ^3.2.1
+
+  # Date count down for
+  date_count_down: ^3.0.0
+
+  #  TO LAUNCH APPS WITHIN HashIT App
+  android_intent_plus: ^4.0.3
+  restart_app: ^1.2.1
+
+  go_router: ^10.1.2
+
+  #firebase
+  #  firebase_core:
+  firebase_core: ^2.14.0
+  firebase_messaging:
+
+  flutter_local_notifications:
+
+  #FOR SCAN PAY FEATURE
+  qr_code_scanner: ^1.0.1
+  loading_indicator: ^3.1.1
+  timeago: ^3.6.0
+  upgrader:
+  printing: ^5.11.1
+
+  package_info_plus:
+  screenshot: ^2.1.0
+
+  # TO be used for picking files
+  file_picker: ^6.1.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+  flutter_launcher_icons: ^0.13.1
+
+  hive_generator:
+  build_runner:
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/images/icon/icon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+     - assets/images/
+     - assets/images/icon/
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  fonts:
+    - family: Euclid
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-ExtraBold.ttf
+          weight: 900
+        - asset: assets/fonts/PlusJakartaSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/PlusJakartaSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/PlusJakartaSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/PlusJakartaSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/PlusJakartaSans-Light.ttf
+          weight: 300
+        - asset: assets/fonts/PlusJakartaSans-ExtraLight.ttf
+          weight: 200
