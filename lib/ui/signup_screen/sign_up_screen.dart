@@ -86,7 +86,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           InkWell(
                             onTap: () {
                               navToWithScreenName(
-                                  context: context, screen: const LoginScreen());
+                                  context: context,
+                                  screen: const LoginScreen());
                             },
                             child: const CustomTextWithLineHeight(
                               text: "Log in",
@@ -267,13 +268,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     authProvider.updateFirstStepAccountCreation(
                                         firstStepAccountCreation);
 
-                                    // final isRegistered = await authProvider
-                                    //     .registerUser(context: context);
-                                    // if (isRegistered && context.mounted) {
-                                    navToWithScreenName(
-                                        context: context,
-                                        screen: const ConfirmEmailScreen());
-                                    // }
+                                    final isRegistered = await authProvider
+                                        .registerUser(context: context);
+                                    if (isRegistered && context.mounted) {
+                                      navToWithScreenName(
+                                          context: context,
+                                          screen: const ConfirmEmailScreen());
+                                    }
                                   }
                                 },
                               ),

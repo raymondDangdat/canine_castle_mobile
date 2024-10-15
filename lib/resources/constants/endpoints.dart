@@ -1,12 +1,12 @@
 /// PRODUCTION URL
-const basedURL = "https://canine-castle-backend.azurewebsites.net/api/v1";
+const basedURL = "http://backend.dev.caninecastle.com.ng/api/v1";
 
 const getStatesEndpoint = "states";
 const getCountriesEndpoint = "countries/all";
 const createCustomerEndpoint = "customers/create";
 const verifyOtpEndpoint = "otps/verify";
 const forgotPasswordEndpoint = "settings/forgot/password";
-const resendOtpEndpoint = "/otps/resend";
+const resendOtpEndpoint = "otps/resend";
 const loginEndpoint = "auth/login";
 const getProfileEndpoint = "auth/profiles";
 const refreshTokenEndpoint = "auth/refresh";

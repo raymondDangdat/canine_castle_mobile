@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import '../resources/constants/color_constants.dart';
@@ -28,7 +27,7 @@ class MainButton extends StatelessWidget {
       this.lightHeight = 1.7,
       this.widget,
       this.border = 30,
-      this.height = 52,
+      this.height = 48,
       this.borderSide,
       this.fontWeight = semiBoldFont});
   @override
@@ -295,41 +294,11 @@ void showLoading(String label, BuildContext ctx) {
           const SizedBox(height: 20),
           Text(
             label,
-            style: Get.textTheme.headline1?.copyWith(fontSize: 16),
+            // style: Get.textTheme.displayLarge?.copyWith(fontSize: 16),
           ),
           const SizedBox(height: 30),
         ],
       ),
-    ),
-  );
-}
-
-void showToast(String label) {
-  Get.snackbar(
-    'Success',
-    label,
-    backgroundColor: Colors.green,
-    colorText: Colors.white,
-    snackPosition: SnackPosition.BOTTOM,
-    margin: const EdgeInsets.only(
-      bottom: 20,
-      left: 20,
-      right: 20,
-    ),
-  );
-}
-
-void showErrorToast(String label) {
-  Get.snackbar(
-    'Error',
-    label,
-    backgroundColor: Colors.red,
-    colorText: Colors.white,
-    snackPosition: SnackPosition.BOTTOM,
-    margin: const EdgeInsets.only(
-      bottom: 20,
-      left: 20,
-      right: 20,
     ),
   );
 }
@@ -390,7 +359,9 @@ Widget appBar(String title,
   return AppBar(
     leading: back
         ? IconButton(
-            onPressed: () => Get.back(),
+            onPressed: () {
+              // Navigator.pop(context);
+            },
             icon: const Icon(Icons.arrow_back_ios_new_rounded, color: black),
           )
         : null,

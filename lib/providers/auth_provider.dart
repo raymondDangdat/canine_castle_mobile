@@ -1,9 +1,6 @@
-// import 'package:http/http.dart' as http;
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
 import '../models/first_step_account_creation.dart';
 import '../models/hive_models/hive_user_model.dart';
 import '../models/user_model.dart';
@@ -22,6 +19,25 @@ class AuthProvider extends ChangeNotifier {
   void updateIsDogOwner(bool newValue) {
     _isDogOwner = newValue;
     notifyListeners();
+  }
+
+  //CHECK IF USER DETAIL IS SAVED IN HIVE
+  Future<bool> updateUserData(BuildContext context) async {
+    debugPrint("Checking user data::::::::::::::::::");
+    bool hasUserInfo = false;
+    if (Hive.box<HiveUserModel>(userBox).isNotEmpty) {
+      _hiveUserData = Hive.box<HiveUserModel>(userBox).getAt(0);
+
+      if (_hiveUserData != null) {
+        final bool profileFetched = await getProfile(context: context);
+        if (profileFetched) {
+          hasUserInfo = true;
+        }
+      }
+    } else {
+      debugPrint("No user data saved on this app");
+    }
+    return hasUserInfo;
   }
 
   FirstStepAccountCreation? _firstStepAccountCreation;
@@ -81,7 +97,7 @@ class AuthProvider extends ChangeNotifier {
       (bool, String) loginRequest = await ApiClient().postRequest(url,
           context: context,
           body: body,
-          printResponseBody: true,
+          printResponseBody: false,
           requestName: "Login");
 
       if (loginRequest.$1) {
@@ -104,13 +120,16 @@ class AuthProvider extends ChangeNotifier {
 
         Hive.box<HiveUserModel>(userBox)
             .put(hiveUserModel.userId, hiveUserModel);
-        isLoggedIn = true;
-        _isLoading = false;
 
         //GET USER PROFILE
         if (context.mounted) {
           getProfile(context: context);
         }
+
+        debugPrint(
+            "Vet Role::::: ${_userModel?.user.role.toString() == vetRole && _userModel?.user.details.vcn != null && _userModel!.user.details.vcn.toString().isEmpty}");
+        isLoggedIn = true;
+        _isLoading = false;
         notifyListeners();
       } else if (loginRequest.$2 == "Email must be verified") {
         _resMessage = loginRequest.$2;
@@ -172,6 +191,40 @@ class AuthProvider extends ChangeNotifier {
     return isVerified;
   }
 
+  bool addingVCN = false;
+  Future<bool> addVCN(
+      {required String vcn, required BuildContext context}) async {
+    bool vcnAdded = false;
+    final connected = await connectionChecker();
+    String url = "vets/add/vcn/${_userProfile?.data.details.slug}";
+    if (context.mounted && connected) {
+      addingVCN = true;
+      notifyListeners();
+      final body = {"vcnNumber": vcn};
+      (bool, String) requestResponse = await ApiClient().putRequest(url,
+          context: context,
+          body: body,
+          printResponseBody: false,
+          requestName: "Add VCN=====");
+
+      if (requestResponse.$1) {
+        vcnAdded = true;
+        addingVCN = false;
+        vcnAdded = true;
+        notifyListeners();
+      } else {
+        _resMessage = requestResponse.$2;
+        addingVCN = false;
+        notifyListeners();
+      }
+    } else {
+      _resMessage = "Internet connection is not available";
+      addingVCN = false;
+      notifyListeners();
+    }
+    return vcnAdded;
+  }
+
   bool _resettingPassword = false;
   bool get resettingPassword => _resettingPassword;
   Future<bool> resetPassword(
@@ -228,7 +281,7 @@ class AuthProvider extends ChangeNotifier {
       (bool, String) verifyOTPRequest = await ApiClient().postRequest(url,
           context: context,
           body: body,
-          printResponseBody: true,
+          printResponseBody: false,
           requestName: "Forgot Password");
 
       if (verifyOTPRequest.$1) {
@@ -265,7 +318,7 @@ class AuthProvider extends ChangeNotifier {
       (bool, String) verifyOTPRequest = await ApiClient().postRequest(url,
           context: context,
           body: body,
-          printResponseBody: true,
+          printResponseBody: false,
           requestName: "Request OTP");
 
       if (verifyOTPRequest.$1) {
@@ -292,7 +345,6 @@ class AuthProvider extends ChangeNotifier {
   }) async {
     bool isRegistered = false;
     final connected = await connectionChecker();
-
     String url =
         _isDogOwner ? createCustomerEndpoint : createVetAccountEndpoint;
     if (context.mounted && connected) {
@@ -305,7 +357,6 @@ class AuthProvider extends ChangeNotifier {
         "password": _firstStepAccountCreation?.password ?? "",
         "country": 1
       };
-
       final vetBody = {
         "email": _firstStepAccountCreation?.email ?? "",
         "fullName": _firstStepAccountCreation?.fullName ?? "",
@@ -314,20 +365,15 @@ class AuthProvider extends ChangeNotifier {
         "vcnNumber": _firstStepAccountCreation?.vcn ?? "",
         "password": _firstStepAccountCreation?.password ?? ""
       };
-
       (bool, String) registerUserRequest = await ApiClient().postRequest(url,
           context: context,
           body: _isDogOwner ? customerBody : vetBody,
           printResponseBody: false,
           requestName: "Registration");
-
       if (registerUserRequest.$1) {
         ///The user is logged in
         isRegistered = true;
         _isLoading = false;
-        isRegistered = true;
-        _isLoading = false;
-        _firstStepAccountCreation = null;
         notifyListeners();
       } else {
         _resMessage = registerUserRequest.$2;
@@ -352,7 +398,6 @@ class AuthProvider extends ChangeNotifier {
   }) async {
     bool passwordChanged = false;
     final connected = await connectionChecker();
-
     String url = changePasswordEndpoint;
     if (context.mounted && connected) {
       _changingPassword = true;
@@ -367,7 +412,6 @@ class AuthProvider extends ChangeNotifier {
           body: body,
           printResponseBody: false,
           requestName: "Change Password");
-
       if (changePasswordRequest.$1) {
         ///The user is logged in
         passwordChanged = true;

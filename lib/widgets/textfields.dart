@@ -65,7 +65,7 @@ class CustomField extends StatelessWidget {
       this.borderColor = borderGrey,
       this.focusBorderColor = mainColor,
       this.formatters,
-      this.borderRadius = 8,
+      this.borderRadius = 12,
       this.hintTxtColor = hintTextColor});
 
   @override

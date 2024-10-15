@@ -91,7 +91,7 @@ class _VCNVerificationScreenState extends State<VCNVerificationScreen> {
                       SizedBox(
                         height: 19.h,
                       ),
-                      authProvider.isLoading
+                      authProvider.addingVCN
                           ? const Center(child: CupertinoActivityIndicator())
                           : MainButton(
                               "Submit",
@@ -103,7 +103,12 @@ class _VCNVerificationScreenState extends State<VCNVerificationScreen> {
                                     "Please enter a valid VCN",
                                   );
                                 } else {
-                                  showVetProfessionalHowItWorksModal(context);
+                                  bool vcnAdded = await authProvider.addVCN(
+                                      vcn: vcnController.text,
+                                      context: context);
+                                  if (vcnAdded) {
+                                    showVetProfessionalHowItWorksModal(context);
+                                  }
                                 }
                               },
                             ),

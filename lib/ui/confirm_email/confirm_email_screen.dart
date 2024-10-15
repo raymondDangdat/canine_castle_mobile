@@ -17,7 +17,6 @@ import '../../widgets/custom_appbar.dart';
 import '../../widgets/custom_snack_back.dart';
 import '../../widgets/custom_text.dart';
 import '../login_screen/login_screen.dart';
-import '../vcn_screen/vcn_screen.dart';
 
 class ConfirmEmailScreen extends StatefulWidget {
   const ConfirmEmailScreen({Key? key}) : super(key: key);
@@ -40,8 +39,8 @@ class _ConfirmEmailScreenState extends State<ConfirmEmailScreen> {
   @override
   void initState() {
     errorController = StreamController<ErrorAnimationType>();
-    customSnackBar(context,
-        "6-digit Verification code has been send to your email address.");
+    // customSnackBar(context,
+    //     "6-digit Verification code has been send to your email address.");
     super.initState();
   }
 
@@ -111,7 +110,7 @@ class _ConfirmEmailScreenState extends State<ConfirmEmailScreen> {
                                   style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 14,
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: boldFont,
                                   ),
                                 ),
                               ],
@@ -227,18 +226,21 @@ class _ConfirmEmailScreenState extends State<ConfirmEmailScreen> {
                                         await authProvider.verifyOTP(
                                             otp: otpController.text,
                                             context: context);
-                                    // if (mounted && emailVerified) {
-                                    if (authProvider.isDogOwner) {
+                                    if (mounted && emailVerified) {
+                                      // if (authProvider.isDogOwner) {
                                       navToWithScreenName(
                                           context: context,
                                           screen: const LoginScreen());
+                                      // } else {
+                                      //   navToWithScreenName(
+                                      //       context: context,
+                                      //       screen:
+                                      //           const VCNVerificationScreen());
+                                      // }
                                     } else {
-                                      navToWithScreenName(
-                                          context: context,
-                                          screen:
-                                              const VCNVerificationScreen());
+                                      otpController.text = "";
+                                      setState(() {});
                                     }
-                                    // }
                                   }
                                 },
                               ),

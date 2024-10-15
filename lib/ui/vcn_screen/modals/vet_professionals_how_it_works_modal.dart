@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import '../../../../../resources/constants/color_constants.dart';
 import '../../../../../resources/constants/dimension_constants.dart';
 import '../../../../../widgets/long_divider.dart';
 import '../../../Widgets/components.dart';
 import '../../../Widgets/custom_text.dart';
+import '../../../providers/auth_provider.dart';
 import '../../../resources/constants/font_constants.dart';
+import '../../../resources/navigation_utils.dart';
+import '../../bottom_nav_screens/bottom_nav_screen.dart';
 
 Future showVetProfessionalHowItWorksModal(
   BuildContext importedContext,
@@ -32,65 +36,74 @@ Future showVetProfessionalHowItWorksModal(
               ),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: horizontalPadding.w),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 14.h),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    const BodyTextLightWithLineHeight(
-                      text: "How  it works",
-                      textColor: blackTextColor,
-                      fontSize: 23,
-                      fontWeight: semiBoldFont,
-                    ),
-                    Column(
-                      children: [
-                        const HowItWorksItem(
-                          label: "Send a Medical Request:",
-                          mainText:
-                              "Submit a request to update a canine's health report during their clinic visit.",
-                          sn: "1",
-                        ),
-                        const HowItWorksItem(
-                          label: "Pet - owner Approval",
-                          mainText:
-                              "The owner accepts the request, allowing you to enter the medical details.",
-                          sn: "2",
-                        ),
-                        const HowItWorksItem(
-                          label: "Record & Update",
-                          mainText:
-                              "Enter and save the canine's medical details in the app.",
-                          sn: "3",
-                        ),
-                        const HowItWorksItem(
-                          label: "Crossbreeding Participation",
-                          mainText:
-                              "Search breeds, send cross-deal requests, and participate in crossbreeding, just like pet owners.",
-                          sn: "4",
-                        ),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        const LongDivider(),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        MainButton(
-                            "Start my 1 month free trial", () async {}),
-                        SizedBox(
-                          height: bottomPadding.h,
-                        )
-                      ],
-                    ),
-                  ],
-                ),
+                child:
+                    Consumer<AuthProvider>(builder: (ctx, authProvider, child) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 14.h),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      const BodyTextLightWithLineHeight(
+                        text: "How  it works",
+                        textColor: blackTextColor,
+                        fontSize: 23,
+                        fontWeight: semiBoldFont,
+                      ),
+                      Column(
+                        children: [
+                          const HowItWorksItem(
+                            label: "Send a Medical Request:",
+                            mainText:
+                                "Submit a request to update a canine's health report during their clinic visit.",
+                            sn: "1",
+                          ),
+                          const HowItWorksItem(
+                            label: "Pet - owner Approval",
+                            mainText:
+                                "The owner accepts the request, allowing you to enter the medical details.",
+                            sn: "2",
+                          ),
+                          const HowItWorksItem(
+                            label: "Record & Update",
+                            mainText:
+                                "Enter and save the canine's medical details in the app.",
+                            sn: "3",
+                          ),
+                          const HowItWorksItem(
+                            label: "Crossbreeding Participation",
+                            mainText:
+                                "Search breeds, send cross-deal requests, and participate in crossbreeding, just like pet owners.",
+                            sn: "4",
+                          ),
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          const LongDivider(),
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          MainButton("Start my 1 month free trial", () async {
+                            Navigator.pop(context);
+                            authProvider.getProfile(context: context);
+                            navToWithScreenName(
+                                context: context,
+                                isPushAndRemoveUntil: true,
+                                screen: const BottomNavScreen());
+                          }),
+                          SizedBox(
+                            height: bottomPadding.h,
+                          )
+                        ],
+                      ),
+                    ],
+                  );
+                }),
               )));
     },
   );
@@ -117,25 +130,26 @@ class HowItWorksItem extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: secondaryColor
-              ),
+                  shape: BoxShape.circle, color: secondaryColor),
               alignment: Alignment.center,
-              child: BodyTextLightWithLineHeight(text: sn,
-              textColor: mainColor,
-              fontWeight: semiBoldFont,),
+              child: BodyTextLightWithLineHeight(
+                text: sn,
+                textColor: mainColor,
+                fontWeight: semiBoldFont,
+              ),
             ),
-            SizedBox(width: 5.w,),
+            SizedBox(
+              width: 5.w,
+            ),
             Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 BodyTextPrimaryWithLineHeight(
                   text: label,
                   fontWeight: mediumFont,
                   textColor: blackTextColor,
                 ),
-
                 BodyTextPrimaryWithLineHeight(
                   text: mainText,
                   fontSize: 13,

@@ -1,3 +1,4 @@
+import 'package:canine_castle_mobile/ui/signup_screen/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -178,9 +179,15 @@ Future showRegistrationOptionModal(
                           ),
                           MainButton(confirm, () {
                             Navigator.pop(context);
-                            navToWithScreenName(
-                                context: context,
-                                screen: const ClinicOptionScreen());
+                            if (authProvider.isDogOwner) {
+                              navToWithScreenName(
+                                  context: context,
+                                  screen: const SignUpScreen());
+                            } else {
+                              navToWithScreenName(
+                                  context: context,
+                                  screen: const ClinicOptionScreen());
+                            }
                           }),
                           SizedBox(
                             height: bottomPadding.h,

@@ -6,7 +6,6 @@ import 'dart:convert';
 
 import 'package:canine_castle_mobile/models/user_model.dart';
 
-
 UserProfileModel userProfileModelFromJson(String str) =>
     UserProfileModel.fromJson(json.decode(str));
 

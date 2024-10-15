@@ -113,6 +113,7 @@ class Details {
 
 class Relationships {
   dynamic country;
+  dynamic transactionPin;
   dynamic state;
   dynamic coverImage;
   dynamic profileImage;
@@ -122,12 +123,14 @@ class Relationships {
     required this.state,
     required this.coverImage,
     required this.profileImage,
+    required this.transactionPin,
   });
 
   factory Relationships.fromJson(Map<String, dynamic> json) => Relationships(
         country: json["country"],
         state: json["state"],
         coverImage: json["coverImage"],
+        transactionPin: json['transaction_pin'],
         profileImage: json["profileImage"],
       );
 }
@@ -136,16 +139,19 @@ class Wallet {
   dynamic id;
   dynamic balance;
   dynamic currency;
+  dynamic tag;
 
   Wallet({
     required this.id,
     required this.balance,
     required this.currency,
+    required this.tag,
   });
 
   factory Wallet.fromJson(Map<String, dynamic> json) => Wallet(
         id: json["id"],
         balance: json["balance"],
+        tag: json["tag"],
         currency: json["currency"],
       );
 }

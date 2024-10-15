@@ -1,0 +1,451 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:canine_castle_mobile/models/canine_added_model.dart';
+import 'package:canine_castle_mobile/models/canines_model.dart';
+import 'package:canine_castle_mobile/models/pet_breed_model.dart';
+import 'package:canine_castle_mobile/models/state_model.dart';
+import 'package:canine_castle_mobile/resources/constants/string_constants.dart';
+import 'package:flutter/material.dart';
+import 'package:http_parser/http_parser.dart';
+import '../models/lat_long_model.dart';
+import '../models/place_prediction_model.dart';
+import '../resources/constants/connectivity.dart';
+import '../resources/constants/endpoints.dart';
+import '../services/api_client.dart';
+import 'package:http/http.dart' as http;
+
+class CanineProvider extends ChangeNotifier {
+  bool makeCanineProfilePublic = true;
+  bool isThisCanineAPedigree = true;
+
+  void toggleMakeCanineProfilePublic() {
+    makeCanineProfilePublic = !makeCanineProfilePublic;
+    notifyListeners();
+  }
+
+  void toggleCanineAPedigree() {
+    isThisCanineAPedigree = !isThisCanineAPedigree;
+    notifyListeners();
+  }
+
+  List<File> canineImages = [];
+
+  void addOrRemoveCanineImage({File? image, int index = 0}) {
+    if (image != null) {
+      debugPrint("To be added:::::: $index");
+      canineImages.insert(index, image);
+    } else {
+      canineImages.removeAt(index);
+    }
+    notifyListeners();
+  }
+
+  final nameOfCanineController = TextEditingController();
+  final addressController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final puppyDealAmountController = TextEditingController();
+  final noPuppyDealAmountController = TextEditingController();
+
+  bool gettingPetBreeds = false;
+
+  List<PetBreedData> petBreeds = [];
+  PetBreedData? selectedBreed;
+  void updateSelectedBreed(PetBreedData? breed) {
+    selectedBreed = breed;
+    notifyListeners();
+  }
+
+  Future<bool> getPetBreeds({required BuildContext context}) async {
+    notifyListeners();
+    bool fetched = false;
+    final connected = await connectionChecker();
+    if (connected) {
+      if (petBreeds.isEmpty) {
+        gettingPetBreeds = true;
+        notifyListeners();
+      }
+      try {
+        if (context.mounted) {
+          (bool, String) requestFetched = await ApiClient().getRequest(
+              "breeds/all",
+              context: context,
+              printResponseBody: false,
+              requestName: "Get Pet Breeds");
+          gettingPetBreeds = false;
+          if (requestFetched.$1) {
+            final petBreedModel = petBreedModelFromJson(requestFetched.$2);
+            petBreeds = petBreedModel.data;
+            fetched = true;
+            notifyListeners();
+          } else {
+            gettingPetBreeds = false;
+            notifyListeners();
+          }
+        }
+      } on SocketException catch (_) {
+        resMessage = "Internet connection is not available";
+        gettingPetBreeds = false;
+        notifyListeners();
+      } catch (e) {
+        resMessage = "Please try again";
+        gettingPetBreeds = false;
+        debugPrint("Get User Profile Exception::::::::${e.toString()}");
+        notifyListeners();
+      }
+    } else {
+      resMessage = "Internet connection is not available";
+      gettingPetBreeds = false;
+      notifyListeners();
+    }
+    return fetched;
+  }
+
+  List<StateCityData> statesList = [];
+  List<StateCityData> citiesList = [];
+  bool gettingStates = false;
+  bool gettingCities = false;
+  StateCityData? selectedState;
+  void updateSelectedState(StateCityData? state) {
+    selectedState = state;
+    notifyListeners();
+  }
+
+  StateCityData? selectedCity;
+  void updateSelectedCity(StateCityData? state) {
+    selectedCity = state;
+    notifyListeners();
+  }
+
+  Future<bool> getStatesOrCities(
+      {required BuildContext context, String stateId = ""}) async {
+    notifyListeners();
+    bool fetched = false;
+    final connected = await connectionChecker();
+    if (connected) {
+      if (stateId.isEmpty) {
+        gettingStates = true;
+        citiesList = [];
+      } else {
+        gettingCities = true;
+        citiesList = [];
+      }
+      String url = stateId.isEmpty
+          ? "countries/states/1"
+          : "countries/states/lgas/$stateId";
+      debugPrint("State ID::::: $stateId The URL is::::::::::::$url");
+      notifyListeners();
+      try {
+        if (context.mounted) {
+          (bool, String) requestFetched = await ApiClient().getRequest(url,
+              context: context,
+              printResponseBody: true,
+              requestName: "Get State or Cities");
+          gettingCities = false;
+          gettingStates = false;
+          if (requestFetched.$1) {
+            final stateOrCityModel = stateModelFromJson(requestFetched.$2);
+            if (stateId.isEmpty) {
+              statesList = stateOrCityModel.data;
+            } else {
+              citiesList = stateOrCityModel.data;
+            }
+            fetched = true;
+            notifyListeners();
+          } else {
+            gettingPetBreeds = false;
+            notifyListeners();
+          }
+        }
+      } on SocketException catch (_) {
+        resMessage = "Internet connection is not available";
+        gettingPetBreeds = false;
+        notifyListeners();
+      } catch (e) {
+        resMessage = "Please try again";
+        gettingPetBreeds = false;
+        debugPrint("Get User Profile Exception::::::::${e.toString()}");
+        notifyListeners();
+      }
+    } else {
+      resMessage = "Internet connection is not available";
+      gettingPetBreeds = false;
+      notifyListeners();
+    }
+    return fetched;
+  }
+
+  CanineData? selectedCanine;
+  void updateSelectedCanine(CanineData? canine) {
+    selectedCanine = canine;
+    notifyListeners();
+  }
+
+  List<CanineData> myCanines = [];
+  List<CanineData> allCanines = [];
+
+  bool gettingCanines = false;
+  Future<bool> getCanines(
+      {required BuildContext context, bool isFetchAll = false}) async {
+    notifyListeners();
+    bool fetched = false;
+    final connected = await connectionChecker();
+    if (connected) {
+      gettingCanines = true;
+      myCanines = [];
+      allCanines = [];
+      String url = isFetchAll ? "pets/all" : "pets/all?my-canines";
+      notifyListeners();
+      try {
+        if (context.mounted) {
+          (bool, String) requestFetched = await ApiClient().getRequest(url,
+              context: context,
+              printResponseBody: false,
+              requestName: "Get Canines");
+          gettingCanines = false;
+          if (requestFetched.$1) {
+            final caninesModel = caninesModelFromJson(requestFetched.$2);
+            if (isFetchAll) {
+              allCanines = caninesModel.data;
+            } else {
+              myCanines = caninesModel.data;
+            }
+            fetched = true;
+            notifyListeners();
+          } else {
+            gettingCanines = false;
+            notifyListeners();
+          }
+        }
+      } on SocketException catch (_) {
+        resMessage = "Internet connection is not available";
+        gettingCanines = false;
+        notifyListeners();
+      } catch (e) {
+        resMessage = "Please try again";
+        gettingCanines = false;
+        debugPrint("Get Canines Exception::::::::${e.toString()}");
+        notifyListeners();
+      }
+    } else {
+      resMessage = "Internet connection is not available";
+      gettingCanines = false;
+      notifyListeners();
+    }
+    return fetched;
+  }
+
+  bool addingCanine = false;
+  Future<bool> addCanine({required BuildContext context}) async {
+    notifyListeners();
+    bool fetched = false;
+    final connected = await connectionChecker();
+    final body = {
+      "name": nameOfCanineController.text,
+      "gender": selectedGender.toLowerCase(),
+      "breed": selectedBreed?.id ?? "",
+      "address": addressController.text,
+      "dob": "2023-01-22",
+      "contractBrief": descriptionController.text,
+      "puppyDealAmount": puppyDealAmountController.text,
+      "noPuppyDealAmount": noPuppyDealAmountController.text,
+      "state": selectedState?.id ?? "",
+      "city": selectedCity?.id ?? "",
+      "longitude": latLongModel?.results[0].geometry.location?.lng ?? "",
+      "latitude": latLongModel?.results[0].geometry.location?.lat ?? "",
+      "isPublic": makeCanineProfilePublic,
+      "isPedigree": isThisCanineAPedigree
+    };
+    if (connected) {
+      String url = "pets/create";
+      notifyListeners();
+      try {
+        if (context.mounted) {
+          addingCanine = true;
+          (bool, String) requestFetched = await ApiClient().postRequest(url,
+              context: context,
+              body: body,
+              printResponseBody: true,
+              requestName: "Add Canine");
+          addingCanine = false;
+          if (requestFetched.$1) {
+            fetched = true;
+            final decodedResponse = json.decode(requestFetched.$2);
+            // resMessage = decodedResponse['message'];
+            notifyListeners();
+            // final canineAddedModel =
+            //     canineAddedModelFromJson(requestFetched.$2);
+            uploadPetImages(
+                petId: "${decodedResponse['data']['id']}", context: context);
+            notifyListeners();
+          } else {
+            addingCanine = false;
+            resMessage = requestFetched.$2;
+            notifyListeners();
+          }
+        }
+      } on SocketException catch (_) {
+        resMessage = "Internet connection is not available";
+        addingCanine = false;
+        notifyListeners();
+      } catch (e) {
+        resMessage = "Please try again";
+        addingCanine = false;
+        debugPrint("Add Canine Exception::::::::${e.toString()}");
+        notifyListeners();
+      }
+    } else {
+      resMessage = "Internet connection is not available";
+      addingCanine = false;
+      notifyListeners();
+    }
+    return fetched;
+  }
+
+  PlacePredictionModel? placePredictionModel;
+  // Method to fetch place suggestions
+  Future<void> fetchPlaceSuggestions(String input,
+      {bool resetPrediction = false}) async {
+    if (resetPrediction) {
+      placePredictionModel = null;
+    } else {
+      if (input.isEmpty) {
+        placePredictionModel = null;
+        return;
+      }
+      final String url =
+          "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$input&key=$googleAPIKey";
+      final response = await http.get(Uri.parse(url));
+      // debugPrint("Places suggestion response:::: ${response.body}");
+      if (response.statusCode == 200) {
+        placePredictionModel = placePredictionModelFromJson(response.body);
+      } else {
+        throw Exception('Failed to load suggestions');
+      }
+    }
+    notifyListeners();
+  }
+
+  LatLongModel? latLongModel;
+  // Method to fetch place suggestions
+  Future<void> getLatLong(String address) async {
+    latLongModel = null;
+    final String url =
+        "https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=$googleAPIKey";
+    final response = await http.get(Uri.parse(url));
+    debugPrint("Lat Long Response::::: ${response.body}");
+    if (response.statusCode == 200) {
+      latLongModel = latLongModelFromJson(response.body);
+      debugPrint(
+          "Lat:: ${latLongModel?.results[0].geometry.location?.lat} Long:: ${latLongModel?.results[0].geometry.location?.lng}");
+    } else {
+      throw Exception('Failed to load suggestions');
+    }
+    notifyListeners();
+  }
+
+  void resetCanineFields() {
+    canineImages = [];
+    nameOfCanineController.text = "";
+    descriptionController.text = "";
+    selectedState = null;
+    selectedCity = null;
+    selectedBreed = null;
+    addressController.text = "";
+    latLongModel = null;
+    noPuppyDealAmountController.text = "";
+    puppyDealAmountController.text = "";
+  }
+
+  // bool uploadingCanineImages = false;
+  Future<bool> uploadPetImages(
+      {required dynamic petId, required BuildContext context}) async {
+    var networkStatus = await connectionChecker();
+    bool infoSent = false;
+    notifyListeners();
+    const url = "$basedURL/settings/media/uploads";
+    debugPrint("URL:::::::$url $petId");
+
+    if (networkStatus) {
+      addingCanine = true;
+      notifyListeners();
+
+      try {
+        var request = http.MultipartRequest(
+          'POST',
+          Uri.parse(url),
+        );
+
+        request.headers.addAll(headerWithTokenAndFormDataMapFunc());
+        request.fields['for'] = "pet";
+        request.fields['lookUp'] = petId;
+        request.fields['type'] = "coverImage";
+
+        debugPrint("Request Fields::: ${request.fields}");
+
+        if (canineImages.isNotEmpty) {
+          for (var file in canineImages) {
+            request.files.add(await http.MultipartFile.fromPath(
+              'file[]',
+              file.path,
+              contentType: MediaType(
+                  'application', 'jpg'), // Adjust the media type as needed
+            ));
+            debugPrint("Added image name ${file.path}");
+          }
+        } else {
+          debugPrint("This product has no image============");
+        }
+
+        var response = await request.send();
+        debugPrint("The status CODE ===== ${response.statusCode}");
+        if (response.statusCode == 200 && context.mounted) {
+          infoSent = true;
+          getCanines(context: context);
+          resetCanineFields();
+          Navigator.pop(context);
+          notifyListeners();
+        } else if (response.statusCode == 401 && context.mounted) {
+          response.stream.transform(utf8.decoder).listen((value) {
+            resMessage = "${json.decode(value)['message']}";
+            debugPrint("Add Product RESPONSE BODY::::$value");
+            debugPrint("The status CODE ===== ${response.statusCode}");
+            notifyListeners();
+          });
+          notifyListeners();
+        } else {
+          response.stream.transform(utf8.decoder).listen((value) {
+            resMessage = "${json.decode(value)['message']}";
+            debugPrint("Add Product RESPONSE BODY::::$value");
+            debugPrint("The status CODE ===== ${response.statusCode}");
+            addingCanine = false;
+          });
+        }
+      } catch (error) {
+        debugPrint("Error Adding Product ${error.toString()}");
+      }
+    } else {}
+
+    addingCanine = false;
+    notifyListeners();
+
+    return infoSent;
+  }
+
+  void resetSearchText() {
+    placePredictionModel = null;
+    notifyListeners();
+  }
+
+  String selectedGender = male;
+
+  void updateSelectedGender(String gender) {
+    selectedGender = gender;
+    notifyListeners();
+  }
+
+  String resMessage = "";
+  void clear() {
+    resMessage = "";
+    notifyListeners();
+  }
+}

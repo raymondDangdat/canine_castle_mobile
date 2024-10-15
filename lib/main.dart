@@ -1,8 +1,10 @@
-
 import 'package:canine_castle_mobile/providers/auth_provider.dart';
+import 'package:canine_castle_mobile/providers/canine_provider.dart';
+import 'package:canine_castle_mobile/providers/in_app_browser_provider.dart';
 import 'package:canine_castle_mobile/providers/inbox_provider.dart';
 import 'package:canine_castle_mobile/providers/search_provider.dart';
 import 'package:canine_castle_mobile/providers/state_and_city_provider.dart';
+import 'package:canine_castle_mobile/providers/wallet_provider.dart';
 import 'package:canine_castle_mobile/resources/constants/color_constants.dart';
 import 'package:canine_castle_mobile/resources/constants/string_constants.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +36,9 @@ void main() async {
       ChangeNotifierProvider(create: (context) => AuthProvider()),
       ChangeNotifierProvider(create: (context) => SearchProvider()),
       ChangeNotifierProvider(create: (context) => InboxProvider()),
+      ChangeNotifierProvider(create: (context) => CanineProvider()),
+      ChangeNotifierProvider(create: (context) => WalletProvider()),
+      ChangeNotifierProvider(create: (context) => InAppBrowserProvider()),
     ],
     child: const MyApp(),
   ));

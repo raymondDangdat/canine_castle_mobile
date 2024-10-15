@@ -17,6 +17,7 @@ import '../../widgets/modals/registration_option_modal.dart';
 import '../../widgets/textfields.dart';
 import '../bottom_nav_screens/bottom_nav_screen.dart';
 import '../forgot_password_flow/forgot_password_screen.dart';
+import '../vcn_screen/vcn_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -32,8 +33,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    emailController.text = kDebugMode ? "realdangdat@gmail.com" : '';
-    passwordController.text = kDebugMode ? "Smart001!" : '';
+    emailController.text = kDebugMode ? "raymonddangdat@gmail.com" : '';
+    passwordController.text = kDebugMode ? "Smart001@@" : '';
     super.initState();
   }
 
@@ -170,10 +171,27 @@ class _LoginScreenState extends State<LoginScreen> {
                                             context: context);
 
                                     if (mounted && isLoggedIn) {
-                                      navToWithScreenName(
-                                          context: context,
-                                          isPushAndRemoveUntil: true,
-                                          screen: const BottomNavScreen());
+                                      if (authProvider.userModel?.user.role
+                                                  .toString() ==
+                                              vetRole &&
+                                          authProvider.userModel?.user.details
+                                                  .vcn !=
+                                              null &&
+                                          authProvider
+                                              .userModel!.user.details.vcn
+                                              .toString()
+                                              .isEmpty) {
+                                        authProvider.updateIsDogOwner(false);
+                                        navToWithScreenName(
+                                            context: context,
+                                            screen:
+                                                const VCNVerificationScreen());
+                                      } else {
+                                        navToWithScreenName(
+                                            context: context,
+                                            isPushAndRemoveUntil: true,
+                                            screen: const BottomNavScreen());
+                                      }
                                     }
                                   }
                                 },

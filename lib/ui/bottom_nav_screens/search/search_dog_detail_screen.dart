@@ -1,3 +1,4 @@
+import 'package:canine_castle_mobile/providers/canine_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -31,7 +32,7 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
       body: SafeArea(
           top: false,
           child:
-              Consumer<SearchProvider>(builder: (ctx, searchProvider, child) {
+              Consumer<CanineProvider>(builder: (ctx, canineProvider, child) {
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -51,17 +52,20 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                 currentIndex = index;
                                 setState(() {});
                               },
-                              itemCount: searchProvider.selectedDog?.images
+                              itemCount: canineProvider
+                                  .selectedCanine
+                                  ?.relationships
+                                  .pictures
                                   .length, // Number of pages to be built dynamically
                               itemBuilder: (BuildContext context, int index) {
-                                final image =
-                                    searchProvider.selectedDog?.images[index];
+                                final image = canineProvider.selectedCanine
+                                    ?.relationships.pictures[index];
                                 return Container(
                                   height: 370.h,
                                   decoration: BoxDecoration(
                                       color: bg,
                                       image: DecorationImage(
-                                          image: AssetImage(image!),
+                                          image: NetworkImage(image!),
                                           fit: BoxFit.cover)),
                                 );
                               },
@@ -83,7 +87,7 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                     horizontal: 10.w, vertical: 5.h),
                                 child: BodyTextPrimaryWithLineHeight(
                                   text:
-                                      "${currentIndex + 1}/${searchProvider.selectedDog?.images.length}",
+                                      "${currentIndex + 1}/${canineProvider.selectedCanine?.relationships.pictures.length}",
                                   textColor:
                                       const Color.fromRGBO(13, 13, 13, 1),
                                   fontWeight: mediumFont,
@@ -158,7 +162,7 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                             Row(
                               children: [
                                 HeaderText(
-                                  text: searchProvider.selectedDog?.name ??
+                                  text: canineProvider.selectedCanine?.name ??
                                       "No Name",
                                   isUpperCase: false,
                                   fontWeight: semiBoldFont,
@@ -192,7 +196,8 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                   width: 4.w,
                                 ),
                                 BodyTextPrimaryWithLineHeight(
-                                  text: searchProvider.selectedDog?.location ??
+                                  text: canineProvider.selectedCanine
+                                          ?.relationships.state ??
                                       "No Location",
                                   fontSize: 13,
                                   textColor:
@@ -211,7 +216,8 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                   width: 4.w,
                                 ),
                                 BodyTextPrimaryWithLineHeight(
-                                  text: searchProvider.selectedDog?.breed ??
+                                  text: canineProvider.selectedCanine
+                                          ?.relationships.breed ??
                                       "No Bredd",
                                   fontSize: 13,
                                   textColor:
@@ -230,7 +236,7 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                   width: 4.w,
                                 ),
                                 BodyTextPrimaryWithLineHeight(
-                                  text: searchProvider.selectedDog?.gender ??
+                                  text: canineProvider.selectedCanine?.gender ??
                                       "No Gender",
                                   fontSize: 13,
                                   textColor:
@@ -248,14 +254,10 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                 SizedBox(
                                   width: 4.w,
                                 ),
-                                BodyTextPrimaryWithLineHeight(
-                                  text: searchProvider.selectedDog?.rating ==
-                                          null
-                                      ? "No Rating"
-                                      : "${searchProvider.selectedDog?.rating} (${searchProvider.selectedDog?.noOfRating})",
+                                const BodyTextPrimaryWithLineHeight(
+                                  text: "4 (45)",
                                   fontSize: 13,
-                                  textColor:
-                                      const Color.fromRGBO(98, 98, 98, 1),
+                                  textColor: Color.fromRGBO(98, 98, 98, 1),
                                   fontWeight: mediumFont,
                                 ),
                                 SizedBox(
@@ -268,79 +270,94 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                         SizedBox(
                           height: 10.h,
                         ),
-                        const HeaderText(
-                          text: description,
-                          textColor: blackTextColor,
-                          isUpperCase: false,
-                        ),
-                        BodyTextPrimaryWithLineHeight(
-                          text: searchProvider.selectedDog!.description,
-                          textColor: const Color.fromRGBO(76, 76, 76, 1),
-                        ),
-                        SizedBox(
-                          height: 15.h,
-                        ),
-                        const HeaderText(
-                          text: crossDeals,
-                          textColor: blackTextColor,
-                          isUpperCase: false,
-                        ),
-                        SizedBox(
-                          height: 4.h,
-                        ),
-                        CustomContainerButton(
-                          onTap: () {},
-                          title: "",
-                          verticalPadding: 15,
-                          horizontalPadding: 10,
-                          bgColor: const Color.fromRGBO(249, 249, 249, 1),
-                          borderRadius: 12,
-                          widget: Column(
+                        if (canineProvider
+                                .selectedCanine!.studParams?.contractBrief !=
+                            null)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const BodyTextPrimaryWithLineHeight(
-                                    text: puppyDeal,
-                                    fontWeight: mediumFont,
-                                  ),
-                                  BodyTextPrimaryWithLineHeight(
-                                    text: searchProvider
-                                                .selectedDog?.puppyDeal ==
-                                            null
-                                        ? "No Deal"
-                                        : "NGN ${searchProvider.selectedDog?.puppyDeal}",
-                                    textColor: blackTextColor,
-                                    fontWeight: semiBoldFont,
-                                  )
-                                ],
+                              const HeaderText(
+                                text: description,
+                                textColor: blackTextColor,
+                                isUpperCase: false,
+                              ),
+                              BodyTextPrimaryWithLineHeight(
+                                text: canineProvider.selectedCanine!.studParams
+                                        ?.contractBrief ??
+                                    "",
+                                textColor: const Color.fromRGBO(76, 76, 76, 1),
                               ),
                               SizedBox(
-                                height: 10.h,
+                                height: 15.h,
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const BodyTextPrimaryWithLineHeight(
-                                    text: noPuppyDeal,
-                                    fontWeight: mediumFont,
-                                  ),
-                                  BodyTextPrimaryWithLineHeight(
-                                    text: searchProvider
-                                                .selectedDog?.puppyDeal ==
-                                            null
-                                        ? "No Deal"
-                                        : "NGN ${searchProvider.selectedDog?.noPuppyDeal}",
-                                    textColor: blackTextColor,
-                                    fontWeight: semiBoldFont,
-                                  )
-                                ],
+                              const HeaderText(
+                                text: crossDeals,
+                                textColor: blackTextColor,
+                                isUpperCase: false,
+                              ),
+                              SizedBox(
+                                height: 4.h,
+                              ),
+                              CustomContainerButton(
+                                onTap: () {},
+                                title: "",
+                                verticalPadding: 15,
+                                horizontalPadding: 10,
+                                bgColor: const Color.fromRGBO(249, 249, 249, 1),
+                                borderRadius: 12,
+                                widget: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const BodyTextPrimaryWithLineHeight(
+                                          text: puppyDeal,
+                                          fontWeight: mediumFont,
+                                        ),
+                                        BodyTextPrimaryWithLineHeight(
+                                          text: canineProvider
+                                                      .selectedCanine
+                                                      ?.studParams
+                                                      ?.puppyDealAmount ==
+                                                  null
+                                              ? "No Deal"
+                                              : "NGN ${canineProvider.selectedCanine?.studParams?.puppyDealAmount}",
+                                          textColor: blackTextColor,
+                                          fontWeight: semiBoldFont,
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10.h,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const BodyTextPrimaryWithLineHeight(
+                                          text: noPuppyDeal,
+                                          fontWeight: mediumFont,
+                                        ),
+                                        BodyTextPrimaryWithLineHeight(
+                                          text: canineProvider
+                                                      .selectedCanine
+                                                      ?.studParams
+                                                      ?.noPuppyDealAmount ==
+                                                  null
+                                              ? "No Deal"
+                                              : "NGN ${canineProvider.selectedCanine?.studParams?.noPuppyDealAmount}",
+                                          textColor: blackTextColor,
+                                          fontWeight: semiBoldFont,
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                        ),
+
                         SizedBox(
                           height: 10.h,
                         ),
@@ -349,9 +366,7 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                             SizedBox(
                               height: 44.h,
                               width: 44.h,
-                              child: Image.asset(
-                                  searchProvider.selectedDog?.dogOwner.avatar ??
-                                      ""),
+                              child: Image.asset(""),
                             ),
                             SizedBox(
                               width: 4.w,
@@ -367,8 +382,8 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                     fontWeight: mediumFont,
                                   ),
                                   BodyTextPrimaryWithLineHeight(
-                                    text: searchProvider
-                                            .selectedDog?.dogOwner.name ??
+                                    text: canineProvider.selectedCanine
+                                            ?.relationships.owner.name ??
                                         "NAN",
                                     textColor:
                                         const Color.fromRGBO(13, 13, 13, 1),
@@ -395,25 +410,25 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                         SizedBox(
                           height: 20.h,
                         ),
-                        ListView.builder(
-                            itemCount:
-                                searchProvider.selectedDog?.reviews.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              final review =
-                                  searchProvider.selectedDog?.reviews[index];
-                              return Row(
-                                children: [
-                                  Container(
-                                    height: 44.h,
-                                    width: 44.h,
-                                    decoration:
-                                        BoxDecoration(shape: BoxShape.circle),
-                                  ),
-                                ],
-                              );
-                            })
+                        // ListView.builder(
+                        //     itemCount:
+                        //         canineProvider.selectedCanine?.reviews.length,
+                        //     shrinkWrap: true,
+                        //     physics: const NeverScrollableScrollPhysics(),
+                        //     itemBuilder: (context, index) {
+                        //       final review =
+                        //           canineProvider.selectedDog?.reviews[index];
+                        //       return Row(
+                        //         children: [
+                        //           Container(
+                        //             height: 44.h,
+                        //             width: 44.h,
+                        //             decoration:
+                        //                 BoxDecoration(shape: BoxShape.circle),
+                        //           ),
+                        //         ],
+                        //       );
+                        //     })
                       ],
                     ),
                   ),

@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:canine_castle_mobile/resources/navigation_utils.dart';
+import 'package:canine_castle_mobile/ui/login_screen/login_screen.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -100,7 +102,7 @@ void copyToClipboard(String info) {
   Fluttertoast.showToast(msg: "Copied!", backgroundColor: mainColor);
 }
 
-Future<void> showHashITLoader(BuildContext context,
+Future<void> showAppLoader(BuildContext context,
     {bool barrierDismissible = false, String message = "Loading..."}) async {
   showDialog(
       barrierDismissible: barrierDismissible,
@@ -224,7 +226,7 @@ Future<bool> logoutAndClearHive({
       .deleteAll(Hive.box<HiveUserModel>(userBox).keys);
   isLogout = true;
   if (context.mounted && isLogout) {
-    // context.push(context.namedLocation(loginRouteName));
+    navToWithScreenName(context: context, screen: const LoginScreen());
   }
   return isLogout;
 }

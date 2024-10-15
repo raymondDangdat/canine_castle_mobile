@@ -36,7 +36,7 @@ class ApiClient {
       if (response.statusCode == 200 || response.statusCode == 201) {
         requestResponse = (true, response.body);
       } else if (response.statusCode == 401) {
-        // logoutAndClearHive(context: context);
+        logoutAndClearHive(context: context);
         requestResponse = (false, decodedResponse["message"]);
       } else {
         requestResponse = (false, decodedResponse["message"]);
@@ -176,7 +176,7 @@ class ApiClient {
   }) async {
     (bool, String) putResponse = (false, "");
     try {
-      final response = await http.put(Uri.parse(endpoint),
+      final response = await http.put(Uri.parse("$basedURL/$endpoint"),
           headers: headerMapFunc(), body: json.encode(body));
       debugPrint("$requestName Status Code: ${response.statusCode}");
       if (printResponseBody) {
