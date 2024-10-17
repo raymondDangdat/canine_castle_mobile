@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:canine_castle_mobile/models/canine_added_model.dart';
 import 'package:canine_castle_mobile/models/canines_model.dart';
 import 'package:canine_castle_mobile/models/pet_breed_model.dart';
 import 'package:canine_castle_mobile/models/state_model.dart';
 import 'package:canine_castle_mobile/resources/constants/string_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
+import '../keys/keys.dart';
 import '../models/lat_long_model.dart';
 import '../models/place_prediction_model.dart';
 import '../resources/constants/connectivity.dart';
@@ -185,7 +185,7 @@ class CanineProvider extends ChangeNotifier {
 
   bool gettingCanines = false;
   Future<bool> getCanines(
-      {required BuildContext context, bool isFetchAll = false}) async {
+      {required BuildContext context, bool isFetchAll = false, bool filterFemaleCanines = false}) async {
     notifyListeners();
     bool fetched = false;
     final connected = await connectionChecker();
@@ -208,6 +208,10 @@ class CanineProvider extends ChangeNotifier {
               allCanines = caninesModel.data;
             } else {
               myCanines = caninesModel.data;
+              if(filterFemaleCanines){
+             myCanines =    myCanines.where((canine) => canine.gender.toString().toLowerCase() == female.toLowerCase()).toList();
+                // myCanines = myCanines.where(canine).toList();
+              }
             }
             fetched = true;
             notifyListeners();
@@ -235,6 +239,7 @@ class CanineProvider extends ChangeNotifier {
   }
 
   bool addingCanine = false;
+  String addedCanineID = "";
   Future<bool> addCanine({required BuildContext context}) async {
     notifyListeners();
     bool fetched = false;
@@ -246,8 +251,8 @@ class CanineProvider extends ChangeNotifier {
       "address": addressController.text,
       "dob": "2023-01-22",
       "contractBrief": descriptionController.text,
-      "puppyDealAmount": puppyDealAmountController.text,
-      "noPuppyDealAmount": noPuppyDealAmountController.text,
+      "puppyDealAmount": puppyDealAmountController.text.replaceAll(",", ""),
+      "noPuppyDealAmount": noPuppyDealAmountController.text.replaceAll(",", ""),
       "state": selectedState?.id ?? "",
       "city": selectedCity?.id ?? "",
       "longitude": latLongModel?.results[0].geometry.location?.lng ?? "",
@@ -261,26 +266,33 @@ class CanineProvider extends ChangeNotifier {
       try {
         if (context.mounted) {
           addingCanine = true;
-          (bool, String) requestFetched = await ApiClient().postRequest(url,
-              context: context,
-              body: body,
-              printResponseBody: true,
-              requestName: "Add Canine");
-          addingCanine = false;
-          if (requestFetched.$1) {
-            fetched = true;
-            final decodedResponse = json.decode(requestFetched.$2);
-            // resMessage = decodedResponse['message'];
-            notifyListeners();
-            // final canineAddedModel =
-            //     canineAddedModelFromJson(requestFetched.$2);
-            uploadPetImages(
-                petId: "${decodedResponse['data']['id']}", context: context);
-            notifyListeners();
-          } else {
+
+          if(addedCanineID.isEmpty){
+            (bool, String) requestFetched = await ApiClient().postRequest(url,
+                context: context,
+                body: body,
+                printResponseBody: true,
+                requestName: "Add Canine");
             addingCanine = false;
-            resMessage = requestFetched.$2;
-            notifyListeners();
+            if (requestFetched.$1) {
+              fetched = true;
+              final decodedResponse = json.decode(requestFetched.$2);
+              // resMessage = decodedResponse['message'];
+              notifyListeners();
+              // final canineAddedModel =
+              //     canineAddedModelFromJson(requestFetched.$2);
+              addedCanineID = "${decodedResponse['data']['id']}";
+              uploadPetImages(
+                  petId: addedCanineID, context: context);
+              notifyListeners();
+            } else {
+              addingCanine = false;
+              resMessage = requestFetched.$2;
+              notifyListeners();
+            }
+          }else{
+            uploadPetImages(
+                petId: addedCanineID, context: context);
           }
         }
       } on SocketException catch (_) {
@@ -354,6 +366,9 @@ class CanineProvider extends ChangeNotifier {
     latLongModel = null;
     noPuppyDealAmountController.text = "";
     puppyDealAmountController.text = "";
+    addingCanine = false;
+    addedCanineID = "";
+    notifyListeners();
   }
 
   // bool uploadingCanineImages = false;
@@ -414,7 +429,7 @@ class CanineProvider extends ChangeNotifier {
           notifyListeners();
         } else {
           response.stream.transform(utf8.decoder).listen((value) {
-            resMessage = "${json.decode(value)['message']}";
+            resMessage = "${json.decode(value)['message'] ?? 'Something went wrong'}";
             debugPrint("Add Product RESPONSE BODY::::$value");
             debugPrint("The status CODE ===== ${response.statusCode}");
             addingCanine = false;

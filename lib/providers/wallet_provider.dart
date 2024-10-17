@@ -4,6 +4,7 @@ import 'package:canine_castle_mobile/models/initialize_payment_model.dart';
 import 'package:canine_castle_mobile/models/retrieved_user_info_model.dart';
 import 'package:canine_castle_mobile/models/transaction_model.dart';
 import 'package:canine_castle_mobile/utils/functions.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import '../models/subscription_plan_model.dart';
@@ -34,6 +35,8 @@ class WalletProvider extends ChangeNotifier {
     bool fetched = false;
     final connected = await connectionChecker();
     if (connected) {
+      gettingTransactions = true;
+      notifyListeners();
       try {
         if (context.mounted) {
           (bool, String) requestFetched = await ApiClient().getRequest(
@@ -221,7 +224,7 @@ class WalletProvider extends ChangeNotifier {
     return fetched;
   }
 
-  final walletTagController = TextEditingController();
+  final walletTagController = TextEditingController(text: kDebugMode ? "CC277615427" : "");
   bool transferringFund = false;
   Future<bool> transferFund(
       {required BuildContext context, required String pin}) async {
@@ -277,6 +280,10 @@ class WalletProvider extends ChangeNotifier {
 
   bool gettingUserDetails = false;
   RetrievedUserInfoModel? retrievedUserInfoModel;
+  void resetRetrieveUserInfo(){
+    retrievedUserInfoModel = null;
+    notifyListeners();
+  }
   Future<bool> retrieveUserDetailsFromWalletTag(
       {required BuildContext context}) async {
     retrievedUserInfoModel = null;

@@ -116,9 +116,9 @@ Future showTransferSummaryModal(BuildContext importedContext) {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          const TileWidget(
+                           TileWidget(
                             leading: 'Recipient name ',
-                            trailing: 'Te (@johndoe)',
+                            trailing: '${walletProvider.walletTagController.text} (${walletProvider.retrievedUserInfoModel?.data.name})',
                             textColor: black,
                           ),
                           TileWidget(

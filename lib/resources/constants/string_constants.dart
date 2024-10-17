@@ -1,4 +1,4 @@
-const googleAPIKey = "AIzaSyCGx6ACNsK5wu0e3v4FFT6Z6j1foQGv4Mo";
+
 
 const noRouteFound = "No Route Found";
 const gender = "Gender";
@@ -12,6 +12,8 @@ const germanShepard = "German Shepard";
 const wallet = "Wallet";
 const transfer = "Transfer";
 const next = "Next";
+const creditTransactionType = "CREDIT";
+const debitTransactionType = "DEBIT";
 const isThisCanineAPredigree = "Is this canine a pedigree";
 const vetProfessional = "Vet professional";
 const state = "State";

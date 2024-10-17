@@ -281,17 +281,16 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 )
                                               ],
                                             ),
-                                            CustomContainerButton(
-                                              onTap: () {},
-                                              title: "${canine.age}",
-                                              bgColor: const Color(0xFFFBF5F0),
-                                              horizontalPadding: 4,
-                                              verticalPadding: 4,
-                                              borderRadius: 56,
-                                              textColor:
-                                                  const Color(0xFFD89B65),
-                                              fontWeight: mediumFont,
-                                            )
+                                            
+                                            Row(
+                                              children: [
+                                                SvgPicture.asset(starRatingImgSvg),
+                                                SizedBox(width: 2.w,),
+                                                const BodyTextPrimaryWithLineHeight(text: "4.5",fontWeight: mediumFont,
+                                                textColor: Color.fromRGBO(76, 76, 76, 1),)
+                                              ],
+                                            ),
+
                                           ],
                                         )
                                       ],

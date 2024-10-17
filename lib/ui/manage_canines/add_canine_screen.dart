@@ -21,6 +21,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../resources/constants/string_constants.dart';
 import '../../widgets/custom_snack_back.dart';
@@ -33,6 +34,18 @@ class AddCanineScreen extends StatefulWidget {
 }
 
 class _AddCanineScreenState extends State<AddCanineScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final canineProvider =
+      Provider.of<CanineProvider>(context, listen: false);
+      canineProvider.resetCanineFields();
+    });
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -397,6 +410,23 @@ class _AddCanineScreenState extends State<AddCanineScreen> {
                                   "Enter amount to charge for no puppy deal",
                                   canineProvider.noPuppyDealAmountController,
                                   formatters: numbersOnlyFormat,
+                                      onChange: (value) {
+                                        if (value != null) {
+                                          if (value.isNotEmpty) {
+                                            var text = NumberFormat.decimalPattern('en')
+                                                .format(int.parse(
+                                                value.replaceAll(',', '')));
+                                            canineProvider.noPuppyDealAmountController.value =
+                                                TextEditingValue(
+                                                  text: text,
+                                                  selection: TextSelection.collapsed(
+                                                    offset: text.length,
+                                                  ),
+                                                );
+                                          }
+                                          setState(() {});
+                                        }
+                                      },
                                 )),
                               ]),
                               const SizedBox(
@@ -421,6 +451,23 @@ class _AddCanineScreenState extends State<AddCanineScreen> {
                                   "Enter amount to charge for puppy deal",
                                   canineProvider.puppyDealAmountController,
                                   formatters: numbersOnlyFormat,
+                                      onChange: (value) {
+                                        if (value != null) {
+                                          if (value.isNotEmpty) {
+                                            var text = NumberFormat.decimalPattern('en')
+                                                .format(int.parse(
+                                                value.replaceAll(',', '')));
+                                            canineProvider.puppyDealAmountController.value =
+                                                TextEditingValue(
+                                                  text: text,
+                                                  selection: TextSelection.collapsed(
+                                                    offset: text.length,
+                                                  ),
+                                                );
+                                          }
+                                          setState(() {});
+                                        }
+                                      },
                                 )),
                               ]),
                             ],

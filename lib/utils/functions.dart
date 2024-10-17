@@ -21,6 +21,7 @@ import '../models/hive_models/hive_user_model.dart';
 import '../resources/constants/color_constants.dart';
 import '../resources/constants/constants.dart';
 import '../resources/constants/string_constants.dart';
+import 'constants.dart';
 
 String formatDate(String str) {
   DateTime date = DateTime.parse(str);
@@ -77,9 +78,9 @@ String getToken() {
     debugPrint("The token retrieved is:::::$token");
     final hiveUserData = Hive.box<HiveUserModel>(userBox).getAt(0);
     token = hiveUserData?.token ?? "";
-    debugPrint("The token retrieved is:::::$token");
+    // debugPrint("The token retrieved is:::::$token");
   } else {
-    debugPrint("Get Token Method has User daata empty ========");
+    debugPrint("Get Token Method has User data empty ========");
   }
   return token;
 }
@@ -274,4 +275,19 @@ Future<int> getBackgroundAndResumeTimeDifference(
 
 String returnBillAmount(String amount) {
   return (double.parse(amount) / 100).toStringAsFixed(0);
+}
+
+extension StringExtension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${this.substring(1).toLowerCase()}";
+  }
+}
+
+String returnFormattedAmount({required String amount}) {
+  debugPrint("Amount to format  $amount");
+  String thisAmount = amount.replaceAll(",", "");
+  debugPrint("Trimmed Amount::: $thisAmount");
+  return double.parse(thisAmount) >= 100
+      ? moneyFormat.format(double.parse(thisAmount))
+      : double.parse(thisAmount).toStringAsFixed(2);
 }

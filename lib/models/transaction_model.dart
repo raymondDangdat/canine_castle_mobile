@@ -43,8 +43,8 @@ class TransactionData {
   dynamic status;
   dynamic charges;
   dynamic location;
-  Payload payload;
-  String slug;
+  Payload? payload;
+  dynamic slug;
   Relationships relationships;
   DateTime createdAt;
   DateTime updatedAt;
@@ -79,7 +79,7 @@ class TransactionData {
         status: json["status"],
         charges: json["charges"],
         location: json["location"],
-        payload: Payload.fromJson(json["payload"]),
+        payload: json["payload"] == null ? null : Payload.fromJson(json["payload"]),
         slug: json["slug"],
         relationships: Relationships.fromJson(json["relationships"]),
         createdAt: DateTime.parse(json["created_at"]),

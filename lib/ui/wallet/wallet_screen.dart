@@ -8,6 +8,7 @@ import 'package:canine_castle_mobile/utils/constants.dart';
 import 'package:canine_castle_mobile/utils/functions.dart';
 import 'package:canine_castle_mobile/widgets/constant_widgets.dart';
 import 'package:canine_castle_mobile/widgets/custom_appbar.dart';
+import 'package:canine_castle_mobile/widgets/long_divider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -201,7 +202,12 @@ class WalletScreen extends StatelessWidget {
                         ),
                       ),
                       walletProver.gettingTransactions
-                          ? CupertinoActivityIndicator()
+                          ? Padding(
+                            padding: EdgeInsets.only(
+                              top: 100.h
+                            ),
+                            child: const CupertinoActivityIndicator(),
+                          )
                           : walletProver.allTransactions.isEmpty
                               ? const Padding(
                                   padding: EdgeInsets.only(top: 100),
@@ -234,12 +240,6 @@ class WalletScreen extends StatelessWidget {
                                         child: Column(
                                           children: [
                                             ListTile(
-                                              // leading: SizedBox(
-                                              //   height: 40,
-                                              //   width: 40,
-                                              //   child: CircleAvatar(
-                                              //       child: Image.asset(data.pic)),
-                                              // ),
                                               title: CustomText(
                                                 text: transaction.description,
                                                 textColor: black,
@@ -252,19 +252,34 @@ class WalletScreen extends StatelessWidget {
                                                 fontSize: 11,
                                                 fontWeight: mediumFont,
                                               ),
-                                              trailing: CustomText(
-                                                text:
-                                                    "${transaction.type == "CREDIT" ? '+' : '-'} $nairaSign${transaction.amount}",
-                                                textColor:
-                                                    transaction.type == "CREDIT"
+                                              trailing: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.end,
+                                                children: [
+                                                  CustomText(
+                                                    text:
+                                                        "${transaction.type == "CREDIT" ? '+' : '-'} $nairaSign${moneyFormat.format(transaction.amount)}",
+                                                    textColor:
+                                                        transaction.type == "CREDIT"
+                                                            ? const Color.fromRGBO(
+                                                                29, 134, 52, 1)
+                                                            : const Color.fromRGBO(
+                                                                226, 7, 7, 1),
+                                                    fontWeight: semiBoldFont,
+                                                  ),
+                                                  CustomText(
+                                                    text:
+                                                    transaction.status.toString().capitalize(),
+                                                    textColor:
+                                                    transaction.status.toString().toLowerCase() == "SUCCESSFUL".toLowerCase()
                                                         ? const Color.fromRGBO(
-                                                            29, 134, 52, 1)
-                                                        : const Color.fromRGBO(
-                                                            226, 7, 7, 1),
-                                                fontWeight: semiBoldFont,
+                                                        29, 134, 52, 1)
+                                                        : mainColor,
+                                                    fontWeight: semiBoldFont,
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                            SvgPicture.asset(line),
+                                            const LongDivider(),
                                           ],
                                         ),
                                       ),

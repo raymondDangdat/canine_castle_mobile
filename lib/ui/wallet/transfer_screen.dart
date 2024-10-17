@@ -1,3 +1,4 @@
+import 'package:canine_castle_mobile/Widgets/custom_text.dart';
 import 'package:canine_castle_mobile/resources/constants/dimension_constants.dart';
 import 'package:canine_castle_mobile/ui/wallet/modals/create_transaction_pin_modal.dart';
 import 'package:canine_castle_mobile/ui/wallet/transfer_summary_modal.dart';
@@ -61,9 +62,11 @@ class _TransferScreenState extends State<TransferScreen> {
                               isCapitalizeSentence: false,
                               type: TextInputType.text,
                               onChange: (value) {
-                                if (value != null && value.length >= 12) {
+                                if (value != null && value.length >= 11) {
                                   walletProver.retrieveUserDetailsFromWalletTag(
                                       context: context);
+                                }else{
+                                  walletProver.resetRetrieveUserInfo();
                                 }
                               },
                               prefixIcon: const Padding(
@@ -73,6 +76,20 @@ class _TransferScreenState extends State<TransferScreen> {
                             ),
                           ),
                         ],
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 10
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            BodyTextPrimaryWithLineHeight(text: walletProver.gettingUserDetails ? "..." :  walletProver.retrievedUserInfoModel?.data.name ?? ''),
+                            if(walletProver.retrievedUserInfoModel?.data.name != null)
+                            SvgPicture.asset(accountRetrievedIcon),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 20),
                       Row(
@@ -116,6 +133,7 @@ class _TransferScreenState extends State<TransferScreen> {
                               walletProver.amountController,
                               isCapitalizeSentence: false,
                               type: TextInputType.number,
+                              formatters: numbersOnlyFormat,
                               onChange: (value) {
                                 if (value != null) {
                                   if (value.isNotEmpty) {
@@ -151,7 +169,7 @@ class _TransferScreenState extends State<TransferScreen> {
                 child: MainButton(
                   next,
                   () {
-                    if (walletProver.walletTagController.text.isEmpty) {
+                    if (walletProver.walletTagController.text.isEmpty || walletProver.retrievedUserInfoModel?.data.name == null) {
                       customSnackBar(context, "Enter a valid wallet tag");
                     } else if (walletProver.amountController.text.isEmpty) {
                       customSnackBar(context, "Enter a valid amount");

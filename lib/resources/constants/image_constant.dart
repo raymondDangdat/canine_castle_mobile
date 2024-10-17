@@ -77,6 +77,7 @@ const eyeIcon = "assets/images/eye.png";
 const balanceIcon = "assets/images/balanceIcon.svg";
 const naira = "assets/images/naira.svg";
 const transferIcon = "assets/images/transfer.svg";
+const accountRetrievedIcon = "assets/images/account_available_icon.svg";
 const addMoney = "assets/images/addMoney.svg";
 const withdraw = "assets/images/withdraw.svg";
 const dogImg = "assets/images/dogImg.png";

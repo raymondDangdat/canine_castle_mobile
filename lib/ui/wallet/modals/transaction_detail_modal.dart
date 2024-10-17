@@ -1,5 +1,7 @@
 import 'package:canine_castle_mobile/Widgets/custom_text.dart';
 import 'package:canine_castle_mobile/providers/wallet_provider.dart';
+import 'package:canine_castle_mobile/resources/constants/string_constants.dart';
+import 'package:canine_castle_mobile/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -47,49 +49,49 @@ Future showTransactionDetailModal(BuildContext importedContext) {
                           SizedBox(
                             height: 20.h,
                           ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: horizontalPadding.w),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                InkWell(
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: SvgPicture.asset(cancel)),
-                                const CustomText(
-                                  text: 'Summary',
-                                  textColor: black,
-                                  fontSize: 16,
-                                  fontWeight: titleFont,
-                                ),
-                                Container(),
-                              ],
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              InkWell(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: SvgPicture.asset(cancel)),
+                              const CustomText(
+                                text: 'Transaction details',
+                                textColor: black,
+                                fontSize: 16,
+                                fontWeight: titleFont,
+                              ),
+                              Container(),
+                            ],
                           ),
                           const SizedBox(height: 30),
                           Container(
                             width: double.infinity,
-                            height: 96,
-                            decoration: const BoxDecoration(
+                            decoration:  BoxDecoration(
                               color: orangeShade2,
-                              borderRadius: BorderRadius.all(
+                              border: Border.all(
+                                color: mainColor
+                              ),
+                              borderRadius: const BorderRadius.all(
                                 Radius.circular(7),
                               ),
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.only(top: 20),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 20
+                              ),
                               child: Column(
                                 children: [
                                   CustomText(
-                                    text: 'Withdrawal',
+                                    text: walletProvider.selectedTransaction?.type ?? "",
                                     textColor: black,
                                     fontSize: 13,
                                   ),
                                   CustomText(
-                                    text: 'NGN 79,000',
-                                    textColor: black,
+                                    text: 'NGN ${moneyFormat.format(double.parse(walletProvider.selectedTransaction?.amount == null ? '00' : walletProvider.selectedTransaction!.amount.toString()))}',
+                                    textColor: walletProvider.selectedTransaction?.type.toString() == creditTransactionType ? black : red,
                                     fontSize: 25,
                                     fontWeight: boldFont,
                                   ),
@@ -110,7 +112,7 @@ Future showTransactionDetailModal(BuildContext importedContext) {
                           ),
                           const TileWidget(
                             leading: 'Status',
-                            trailing: 'Succesful',
+                            trailing: 'Successful',
                             textColor: greenShade2,
                           ),
                           const TileWidget(
