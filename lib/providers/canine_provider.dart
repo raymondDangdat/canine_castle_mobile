@@ -4,11 +4,13 @@ import 'package:canine_castle_mobile/models/canines_model.dart';
 import 'package:canine_castle_mobile/models/pet_breed_model.dart';
 import 'package:canine_castle_mobile/models/state_model.dart';
 import 'package:canine_castle_mobile/resources/constants/string_constants.dart';
+import 'package:canine_castle_mobile/utils/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 import '../keys/keys.dart';
 import '../models/lat_long_model.dart';
 import '../models/place_prediction_model.dart';
+import '../models/stud_request_model.dart';
 import '../resources/constants/connectivity.dart';
 import '../resources/constants/endpoints.dart';
 import '../services/api_client.dart';
@@ -183,9 +185,24 @@ class CanineProvider extends ChangeNotifier {
   List<CanineData> myCanines = [];
   List<CanineData> allCanines = [];
 
+  CanineData? selectedFemaleDog;
+  void updateSelectedFemaleDog(CanineData? canine) {
+    selectedFemaleDog = canine;
+    notifyListeners();
+  }
+
+  CrossDealData? selectedCrossDeal;
+  void updateSelectedCrossDeal(CrossDealData? crossDeal) {
+    selectedCrossDeal = crossDeal;
+    debugPrint("Cross Deal Selected:: ${selectedCrossDeal?.type}");
+    notifyListeners();
+  }
+
   bool gettingCanines = false;
   Future<bool> getCanines(
-      {required BuildContext context, bool isFetchAll = false, bool filterFemaleCanines = false}) async {
+      {required BuildContext context,
+      bool isFetchAll = false,
+      bool filterFemaleCanines = false}) async {
     notifyListeners();
     bool fetched = false;
     final connected = await connectionChecker();
@@ -193,7 +210,7 @@ class CanineProvider extends ChangeNotifier {
       gettingCanines = true;
       myCanines = [];
       allCanines = [];
-      String url = isFetchAll ? "pets/all" : "pets/all?my-canines";
+      String url = isFetchAll ? "pets/all" : "pets/all?my-canines=all";
       notifyListeners();
       try {
         if (context.mounted) {
@@ -208,8 +225,12 @@ class CanineProvider extends ChangeNotifier {
               allCanines = caninesModel.data;
             } else {
               myCanines = caninesModel.data;
-              if(filterFemaleCanines){
-             myCanines =    myCanines.where((canine) => canine.gender.toString().toLowerCase() == female.toLowerCase()).toList();
+              if (filterFemaleCanines) {
+                myCanines = myCanines
+                    .where((canine) =>
+                        canine.gender.toString().toLowerCase() ==
+                        female.toLowerCase())
+                    .toList();
                 // myCanines = myCanines.where(canine).toList();
               }
             }
@@ -238,8 +259,15 @@ class CanineProvider extends ChangeNotifier {
     return fetched;
   }
 
+
   bool addingCanine = false;
   String addedCanineID = "";
+  bool isErrorMessage = true;
+
+  void resetIsSuccessMessage(){
+    isErrorMessage = true;
+    notifyListeners();
+  }
   Future<bool> addCanine({required BuildContext context}) async {
     notifyListeners();
     bool fetched = false;
@@ -267,7 +295,7 @@ class CanineProvider extends ChangeNotifier {
         if (context.mounted) {
           addingCanine = true;
 
-          if(addedCanineID.isEmpty){
+          if (addedCanineID.isEmpty) {
             (bool, String) requestFetched = await ApiClient().postRequest(url,
                 context: context,
                 body: body,
@@ -282,17 +310,15 @@ class CanineProvider extends ChangeNotifier {
               // final canineAddedModel =
               //     canineAddedModelFromJson(requestFetched.$2);
               addedCanineID = "${decodedResponse['data']['id']}";
-              uploadPetImages(
-                  petId: addedCanineID, context: context);
+              uploadPetImages(petId: addedCanineID, context: context);
               notifyListeners();
             } else {
               addingCanine = false;
               resMessage = requestFetched.$2;
               notifyListeners();
             }
-          }else{
-            uploadPetImages(
-                petId: addedCanineID, context: context);
+          } else {
+            uploadPetImages(petId: addedCanineID, context: context);
           }
         }
       } on SocketException catch (_) {
@@ -308,6 +334,58 @@ class CanineProvider extends ChangeNotifier {
     } else {
       resMessage = "Internet connection is not available";
       addingCanine = false;
+      notifyListeners();
+    }
+    return fetched;
+  }
+
+
+  Future<bool> sendStudRequest({required BuildContext context}) async {
+    isErrorMessage = true;
+    notifyListeners();
+    bool fetched = false;
+    final connected = await connectionChecker();
+    final body = {
+      "deal" : selectedCrossDeal?.type,
+      "offerAmount" : yourOfferController.text.isEmpty ? selectedCrossDeal?.amount : yourOfferController.text.replaceAll(",", ""),
+      "message" : messageController.text,
+      "male" : selectedCanine?.id,
+      "female" : selectedFemaleDog?.id
+    };
+    if (connected) {
+      String url = "studs/create";
+      debugPrint("Pay load of stud request:: $body");
+      notifyListeners();
+      try {
+        showAppLoader(context, message: "Sending Request...");
+        if (context.mounted) {
+            (bool, String) requestFetched = await ApiClient().postRequest(url,
+                context: context,
+                body: body,
+                printResponseBody: true,
+                requestName: "Send Stud Request");
+            popLoader(context: context, isGoRouterScreen: false);
+            if (requestFetched.$1) {
+              fetched = true;
+              isErrorMessage = false;
+              resMessage = "Stud request created successfully";
+              notifyListeners();
+            } else {
+              resMessage = requestFetched.$2;
+              notifyListeners();
+            }
+        }
+      } on SocketException catch (_) {
+        resMessage = "Internet connection is not available";
+        notifyListeners();
+      } catch (e) {
+        resMessage = "Please try again";
+        debugPrint("Send Stud Request Exception::::::::${e.toString()}");
+        popLoader(context: context, isGoRouterScreen: false);
+        notifyListeners();
+      }
+    } else {
+      resMessage = "Internet connection is not available";
       notifyListeners();
     }
     return fetched;
@@ -429,7 +507,8 @@ class CanineProvider extends ChangeNotifier {
           notifyListeners();
         } else {
           response.stream.transform(utf8.decoder).listen((value) {
-            resMessage = "${json.decode(value)['message'] ?? 'Something went wrong'}";
+            resMessage =
+                "${json.decode(value)['message'] ?? 'Something went wrong'}";
             debugPrint("Add Product RESPONSE BODY::::$value");
             debugPrint("The status CODE ===== ${response.statusCode}");
             addingCanine = false;
@@ -463,4 +542,44 @@ class CanineProvider extends ChangeNotifier {
     resMessage = "";
     notifyListeners();
   }
+
+  bool showAddOffer = false;
+  void updateShowAddOffer(bool newValue) {
+    yourOfferController.text = "";
+    showAddOffer = newValue;
+    isErrorMessage = true;
+    notifyListeners();
+  }
+
+  final messageController = TextEditingController();
+  final yourOfferController = TextEditingController();
+
+  List<CrossDealData> crossDealOptions = [];
+
+  void addCrossDeals() {
+    crossDealOptions = [];
+    if (selectedCanine?.studParams?.noPuppyDealAmount != null) {
+      final noPuppyDeal = CrossDealData(
+          amount: selectedCanine!.studParams!.noPuppyDealAmount.toString(),
+          type: "No Puppy Deal");
+      crossDealOptions.add(noPuppyDeal);
+      selectedCrossDeal = noPuppyDeal;
+    }
+    if (selectedCanine?.studParams?.puppyDealAmount != null) {
+      final puppyDeal = CrossDealData(
+          amount: selectedCanine!.studParams!.puppyDealAmount.toString(),
+          type: "Puppy Deal");
+      crossDealOptions.add(puppyDeal);
+    }
+    notifyListeners();
+  }
+}
+
+class CrossDealData {
+  final String type;
+  final String amount;
+  CrossDealData({
+    required this.amount,
+    required this.type,
+  });
 }

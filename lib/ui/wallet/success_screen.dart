@@ -121,7 +121,8 @@ class _SuccessScreenState extends State<SuccessScreen> {
                                           authProvider, child) {
                                 return MainButton('Done', fontSize: 14, () {
                                   authProvider.getProfile(context: context);
-                                  walletProvider.getTransactions(context: context);
+                                  walletProvider.getTransactions(
+                                      context: context);
                                   Navigator.pop(context);
                                   Navigator.pop(context);
                                   Navigator.pop(context);

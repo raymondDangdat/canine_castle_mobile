@@ -1,5 +1,3 @@
-
-
 const noRouteFound = "No Route Found";
 const gender = "Gender";
 const male = "Male";
@@ -9,6 +7,8 @@ const verificationOTPVerificationOption = "verification";
 const transactionOTPVerificationOption = "transaction";
 const breed = "Breed";
 const germanShepard = "German Shepard";
+const crossDealTab = "Cross deal";
+const medicalTab = "Medical";
 const wallet = "Wallet";
 const transfer = "Transfer";
 const next = "Next";

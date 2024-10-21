@@ -12,7 +12,9 @@ import 'long_divider.dart';
 class CustomAppbar extends StatelessWidget {
   final String title;
   final Widget? widget;
-  const CustomAppbar({Key? key, required this.title, this.widget})
+  final bool showArrowBack;
+  const CustomAppbar({Key? key, required this.title, this.widget,
+  this.showArrowBack = true})
       : super(key: key);
 
   @override
@@ -25,6 +27,7 @@ class CustomAppbar extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  if(showArrowBack)
                   InkWell(
                       onTap: () {
                         Navigator.pop(context);

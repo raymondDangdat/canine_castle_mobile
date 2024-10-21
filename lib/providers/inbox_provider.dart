@@ -1,84 +1,136 @@
+import 'dart:io';
+import 'package:canine_castle_mobile/resources/constants/string_constants.dart';
 import 'package:flutter/material.dart';
-
-import '../resources/constants/image_constant.dart';
-// import 'package:http/http.dart' as http;
+import '../models/stud_request_model.dart';
+import '../resources/constants/connectivity.dart';
+import '../services/api_client.dart';
 
 class InboxProvider extends ChangeNotifier {
-  bool _isMessagesTab = true;
-  bool get isMessagesTab => _isMessagesTab;
 
-  void updateIsDogTab({bool newValue = true}) {
-    _isMessagesTab = newValue;
+  String inboxTab = crossDealTab;
+
+  String resMessage = "";
+  void clear(){
+    resMessage = "";
     notifyListeners();
   }
 
-  Request? _selectedRequest;
-  Request? get selectedRequest => _selectedRequest;
+  void updateIsCrossDealsTab({String newValue = crossDealTab}) {
+    inboxTab = newValue;
+    notifyListeners();
+  }
 
-  void updateSelectedRequest(Request? request) {
+  RequestData? _selectedRequest;
+  RequestData? get selectedRequest => _selectedRequest;
+
+  void updateSelectedRequest(RequestData? request) {
     _selectedRequest = request;
     notifyListeners();
   }
 
-  final List<Request> _requests = [
-    Request(
-        dogImg: request1,
-        requestMessage:
-            "Hey Mike, I would love to crossbreed my female german shepherd with this your dutchpug",
-        dealType: "No Puppy Deal",
-        price: "60,000",
-        requestUser:
-            RequestUser(userName: "Dev Ray", profileImg: devRayProfileImg)),
-    Request(
-        dogImg: request3,
-        requestMessage:
-            "Hey Mike, I would love to crossbreed my female german shepherd with this your dutchpug",
-        dealType: "No Puppy Deal",
-        price: "60,000",
-        status: true,
-        requestUser: RequestUser(
-            userName: "Adamu Musa", profileImg: adamuMusaProfileImg)),
-    Request(
-        dogImg: request2,
-        requestMessage:
-            "Hey Mike, I would love to crossbreed my female german shepherd with this your dutchpug",
-        dealType: "No Puppy Deal",
-        price: "60,000",
-        requestUser:
-            RequestUser(userName: "Dev Ray", profileImg: devRayProfileImg)),
-    Request(
-        dogImg: request3,
-        requestMessage:
-            "Hey Mike, I would love to crossbreed my female german shepherd with this your dutchpug",
-        dealType: "No Puppy Deal",
-        price: "60,000",
-        status: true,
-        requestUser: RequestUser(
-            userName: "Adamu Musa", profileImg: adamuMusaProfileImg)),
-  ];
-  List<Request> get requests => _requests;
-}
 
-class Request {
-  final String dogImg;
-  final bool status;
-  final String requestMessage;
-  final String dealType;
-  final String price;
-  final RequestUser requestUser;
 
-  Request(
-      {required this.dogImg,
-      this.status = false,
-      required this.requestMessage,
-      required this.dealType,
-      required this.price,
-      required this.requestUser});
-}
+  bool gettingStudRequest = false;
+  List<RequestData> studRequests = [];
+  Future<bool> getStudRequests(
+      {required BuildContext context,}) async {
+    notifyListeners();
+    bool fetched = false;
+    final connected = await connectionChecker();
+    if (connected) {
+      gettingStudRequest = true;
+      studRequests = [];
+      String url = "studs/all";
+      notifyListeners();
+      try {
+        if (context.mounted) {
+          (bool, String) requestFetched = await ApiClient().getRequest(url,
+              context: context,
+              printResponseBody: false,
+              requestName: "Get Stud Requests");
+          gettingStudRequest = false;
+          if (requestFetched.$1) {
+            final studRequestModel = studRequestModelFromJson(requestFetched.$2);
+            studRequests = studRequestModel.data;
+            fetched = true;
+            notifyListeners();
+          } else {
+            gettingStudRequest = false;
+            notifyListeners();
+          }
+        }
+      } on SocketException catch (_) {
+        resMessage = "Internet connection is not available";
+        gettingStudRequest = false;
+        notifyListeners();
+      } catch (e) {
+        resMessage = "Please try again";
+        gettingStudRequest = false;
+        debugPrint("Get Canines Exception::::::::${e.toString()}");
+        notifyListeners();
+      }
+    } else {
+      resMessage = "Internet connection is not available";
+      gettingStudRequest = false;
+      notifyListeners();
+    }
+    return fetched;
+  }
 
-class RequestUser {
-  final String userName;
-  final String profileImg;
+  bool isErrorMessage = true;
 
-  RequestUser({required this.userName, required this.profileImg});
+  bool updatingStudRequest = false;
+  Future<bool> updateStudRequest(
+      {required BuildContext context, required String status}) async {
+    final body = {
+      "status" : status, //'accepted', 'done', 'completed', 'declined',
+      "studDate" : "${selectedRequest!.createdAt.year}-${selectedRequest!.createdAt.month}-${selectedRequest!.createdAt.day}",
+      "remarks" : selectedRequest!.message
+    };
+
+    isErrorMessage = true;
+    notifyListeners();
+    bool fetched = false;
+    final connected = await connectionChecker();
+    if (connected) {
+      updatingStudRequest = true;
+      String url = "studs/update/${selectedRequest!.slug}";
+      debugPrint("Update stud payload::: $body URL:::$url");
+      notifyListeners();
+      try {
+        if (context.mounted) {
+          (bool, String) requestFetched = await ApiClient().patchRequest(url,
+              context: context,
+              printResponseBody: false,
+              body: body,
+              requestName: "Get Stud Requests");
+          updatingStudRequest = false;
+          if (requestFetched.$1) {
+            fetched = true;
+            isErrorMessage = false;
+            resMessage = "Stud request updated successfully";
+            notifyListeners();
+          } else {
+            updatingStudRequest = false;
+            resMessage = requestFetched.$2;
+            notifyListeners();
+          }
+        }
+      } on SocketException catch (_) {
+        resMessage = "Internet connection is not available";
+        updatingStudRequest = false;
+        notifyListeners();
+      } catch (e) {
+        resMessage = "Please try again";
+        updatingStudRequest = false;
+        debugPrint("Get Canines Exception::::::::${e.toString()}");
+        notifyListeners();
+      }
+    } else {
+      resMessage = "Internet connection is not available";
+      updatingStudRequest = false;
+      notifyListeners();
+    }
+    return fetched;
+  }
 }

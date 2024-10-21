@@ -39,7 +39,7 @@ class _AddCanineScreenState extends State<AddCanineScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final canineProvider =
-      Provider.of<CanineProvider>(context, listen: false);
+          Provider.of<CanineProvider>(context, listen: false);
       canineProvider.resetCanineFields();
     });
 
@@ -410,23 +410,25 @@ class _AddCanineScreenState extends State<AddCanineScreen> {
                                   "Enter amount to charge for no puppy deal",
                                   canineProvider.noPuppyDealAmountController,
                                   formatters: numbersOnlyFormat,
-                                      onChange: (value) {
-                                        if (value != null) {
-                                          if (value.isNotEmpty) {
-                                            var text = NumberFormat.decimalPattern('en')
+                                  onChange: (value) {
+                                    if (value != null) {
+                                      if (value.isNotEmpty) {
+                                        var text =
+                                            NumberFormat.decimalPattern('en')
                                                 .format(int.parse(
-                                                value.replaceAll(',', '')));
-                                            canineProvider.noPuppyDealAmountController.value =
-                                                TextEditingValue(
-                                                  text: text,
-                                                  selection: TextSelection.collapsed(
-                                                    offset: text.length,
-                                                  ),
-                                                );
-                                          }
-                                          setState(() {});
-                                        }
-                                      },
+                                                    value.replaceAll(',', '')));
+                                        canineProvider
+                                            .noPuppyDealAmountController
+                                            .value = TextEditingValue(
+                                          text: text,
+                                          selection: TextSelection.collapsed(
+                                            offset: text.length,
+                                          ),
+                                        );
+                                      }
+                                      setState(() {});
+                                    }
+                                  },
                                 )),
                               ]),
                               const SizedBox(
@@ -451,23 +453,24 @@ class _AddCanineScreenState extends State<AddCanineScreen> {
                                   "Enter amount to charge for puppy deal",
                                   canineProvider.puppyDealAmountController,
                                   formatters: numbersOnlyFormat,
-                                      onChange: (value) {
-                                        if (value != null) {
-                                          if (value.isNotEmpty) {
-                                            var text = NumberFormat.decimalPattern('en')
+                                  onChange: (value) {
+                                    if (value != null) {
+                                      if (value.isNotEmpty) {
+                                        var text =
+                                            NumberFormat.decimalPattern('en')
                                                 .format(int.parse(
-                                                value.replaceAll(',', '')));
-                                            canineProvider.puppyDealAmountController.value =
-                                                TextEditingValue(
-                                                  text: text,
-                                                  selection: TextSelection.collapsed(
-                                                    offset: text.length,
-                                                  ),
-                                                );
-                                          }
-                                          setState(() {});
-                                        }
-                                      },
+                                                    value.replaceAll(',', '')));
+                                        canineProvider.puppyDealAmountController
+                                            .value = TextEditingValue(
+                                          text: text,
+                                          selection: TextSelection.collapsed(
+                                            offset: text.length,
+                                          ),
+                                        );
+                                      }
+                                      setState(() {});
+                                    }
+                                  },
                                 )),
                               ]),
                             ],

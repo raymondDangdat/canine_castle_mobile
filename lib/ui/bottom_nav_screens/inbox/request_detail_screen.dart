@@ -1,9 +1,9 @@
+import 'package:canine_castle_mobile/ui/bottom_nav_screens/inbox/widgets/modals/how_stud_crossing_works_modal.dart';
+import 'package:canine_castle_mobile/utils/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
-
 import '../../../Widgets/components.dart';
 import '../../../Widgets/custom_text.dart';
 import '../../../Widgets/title_widget.dart';
@@ -44,12 +44,12 @@ class RequestDetailScreen extends StatelessWidget {
                     height: 32.h,
                     width: 32.h,
                     decoration: BoxDecoration(
+                      color: hintTextColor,
                         borderRadius: BorderRadius.circular(56.r),
-                        image: DecorationImage(
-                            image: AssetImage(inboxProvider
-                                    .selectedRequest?.requestUser.profileImg ??
-                                ""),
-                            fit: BoxFit.cover)),
+                        // image: const DecorationImage(
+                        //     image: AssetImage(""),
+                        //     fit: BoxFit.cover)
+                    ),
                   ),
                   SizedBox(
                     width: 12.w,
@@ -60,7 +60,7 @@ class RequestDetailScreen extends StatelessWidget {
                       children: [
                         TitleWidget(
                           title: inboxProvider
-                                  .selectedRequest?.requestUser.userName ??
+                                  .selectedRequest?.relationship.pets[1].relationships.owner.name ??
                               "No Name",
                           fontSize: 16,
                           fontWeight: semiBoldFont,
@@ -74,82 +74,98 @@ class RequestDetailScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Icon(
-                    Iconsax.message,
-                    size: 20.h,
-                  )
+                  SvgPicture.asset(moreIconVertical),
                 ],
               ),
             ),
             SizedBox(
-              height: 34.h,
+              height: 24.h,
             ),
             Expanded(
                 child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Container(
-                    height: 262.h,
-                    width: double.infinity,
-                    padding: EdgeInsets.all(12.r),
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFFFBF5F0),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(11.r)),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding.w
                     ),
-                    child: Column(
+                    child: Container(
+                      // height: 262.h,
+                      width: double.infinity,
+                      padding: EdgeInsets.all(12.r),
+                      decoration: ShapeDecoration(
+                        color: const Color(0xFFFBF5F0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(11.r)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 160.h,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7.r),
+                                image: DecorationImage(
+                                    image: NetworkImage(
+                                        inboxProvider.selectedRequest!.relationship.pets[1].relationships.pictures.isEmpty ? "" :
+                                        inboxProvider.selectedRequest!.relationship.pets[1].relationships.pictures[0]), fit: BoxFit.cover)),
+                          ),
+                          SizedBox(
+                            height: 16.h,
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 12.w,
+                              ),
+                              Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      TitleWidget(
+                                        title:
+                                            "${inboxProvider.selectedRequest!.deal} ($nairaSign${returnFormattedAmount(amount: inboxProvider.selectedRequest!.offerAmount.toString())})",
+                                        textColor: blackTextColor,
+                                        fontWeight: mediumFont,
+                                        fontSize: 14,
+                                      ),
+                                    ],
+                                  ),
+                                  BodyTextPrimaryWithLineHeight(
+                                    text: inboxProvider
+                                        .selectedRequest!.message,
+                                    fontWeight: mediumFont,
+                                    fontSize: 13,
+                                    textColor: const Color(0xFF626262),
+                                  )
+                                ],
+                              )),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10.h,),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding.w
+
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Container(
-                          height: 160.h,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(7.r),
-                              image: DecorationImage(
-                                  image: AssetImage(
-                                      inboxProvider.selectedRequest!.dogImg))),
-                        ),
-                        SizedBox(
-                          height: 16.h,
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 12.w,
-                            ),
-                            Expanded(
-                                child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    TitleWidget(
-                                      title:
-                                          "${inboxProvider.selectedRequest!.dealType} ($nairaSign${inboxProvider.selectedRequest!.price})",
-                                      textColor: blackTextColor,
-                                      fontWeight: mediumFont,
-                                      fontSize: 14,
-                                    ),
-                                  ],
-                                ),
-                                BodyTextPrimaryWithLineHeight(
-                                  text: inboxProvider
-                                      .selectedRequest!.requestMessage,
-                                  fontWeight: mediumFont,
-                                  fontSize: 13,
-                                  textColor: const Color(0xFF626262),
-                                  maxLines: 1,
-                                )
-                              ],
-                            )),
-                            SvgPicture.asset(forwardIconSvg),
-                          ],
-                        )
+                        BodyTextPrimaryWithLineHeight(text: returnFormattedDateAndTime(inboxProvider.selectedRequest!.createdAt.toString()))
                       ],
                     ),
                   )
                 ],
               ),
             )),
-            if (!inboxProvider.selectedRequest!.status)
+            if (inboxProvider.selectedRequest!.status.toString().toLowerCase() == "pending")
               Column(
                 children: [
                   const LongDivider(),
@@ -164,7 +180,9 @@ class RequestDetailScreen extends StatelessWidget {
                         Expanded(
                           child: MainButton(
                             decline,
-                            () {},
+                            () {
+                              showHowStudCrossingWorksModal(context);
+                            },
                             color: const Color(0xFFF9F0E8),
                             textColor: mainColor,
                           ),
@@ -175,7 +193,9 @@ class RequestDetailScreen extends StatelessWidget {
                         Expanded(
                             child: MainButton(
                           accept,
-                          () {},
+                          () {
+                            showHowStudCrossingWorksModal(context);
+                          },
                         )),
                       ],
                     ),

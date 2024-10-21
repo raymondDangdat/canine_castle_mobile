@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../resources/constants/font_constants.dart';
+import '../resources/constants/image_constant.dart';
 import 'components.dart';
 import 'custom_text.dart';
 
@@ -22,7 +23,7 @@ class HashITLoadingIndicator extends StatelessWidget {
   final String gif;
   const HashITLoadingIndicator({
     this.message = "Please hold on",
-    this.gif = "",
+    this.gif = splashScreenLogo,
     Key? key,
   }) : super(key: key);
 

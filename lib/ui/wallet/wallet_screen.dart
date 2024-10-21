@@ -203,11 +203,9 @@ class WalletScreen extends StatelessWidget {
                       ),
                       walletProver.gettingTransactions
                           ? Padding(
-                            padding: EdgeInsets.only(
-                              top: 100.h
-                            ),
-                            child: const CupertinoActivityIndicator(),
-                          )
+                              padding: EdgeInsets.only(top: 100.h),
+                              child: const CupertinoActivityIndicator(),
+                            )
                           : walletProver.allTransactions.isEmpty
                               ? const Padding(
                                   padding: EdgeInsets.only(top: 100),
@@ -253,26 +251,33 @@ class WalletScreen extends StatelessWidget {
                                                 fontWeight: mediumFont,
                                               ),
                                               trailing: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
                                                 children: [
                                                   CustomText(
                                                     text:
                                                         "${transaction.type == "CREDIT" ? '+' : '-'} $nairaSign${moneyFormat.format(transaction.amount)}",
-                                                    textColor:
-                                                        transaction.type == "CREDIT"
-                                                            ? const Color.fromRGBO(
-                                                                29, 134, 52, 1)
-                                                            : const Color.fromRGBO(
-                                                                226, 7, 7, 1),
+                                                    textColor: transaction
+                                                                .type ==
+                                                            "CREDIT"
+                                                        ? const Color.fromRGBO(
+                                                            29, 134, 52, 1)
+                                                        : const Color.fromRGBO(
+                                                            226, 7, 7, 1),
                                                     fontWeight: semiBoldFont,
                                                   ),
                                                   CustomText(
-                                                    text:
-                                                    transaction.status.toString().capitalize(),
-                                                    textColor:
-                                                    transaction.status.toString().toLowerCase() == "SUCCESSFUL".toLowerCase()
+                                                    text: transaction.status
+                                                        .toString()
+                                                        .capitalize(),
+                                                    textColor: transaction
+                                                                .status
+                                                                .toString()
+                                                                .toLowerCase() ==
+                                                            "SUCCESSFUL"
+                                                                .toLowerCase()
                                                         ? const Color.fromRGBO(
-                                                        29, 134, 52, 1)
+                                                            29, 134, 52, 1)
                                                         : mainColor,
                                                     fontWeight: semiBoldFont,
                                                   ),

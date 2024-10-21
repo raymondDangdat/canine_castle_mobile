@@ -35,7 +35,8 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
               Consumer<CanineProvider>(builder: (ctx, canineProvider, child) {
             return Column(
               children: [
-                Expanded(child: SingleChildScrollView(
+                Expanded(
+                    child: SingleChildScrollView(
                   child: Column(
                     children: [
                       SizedBox(
@@ -59,7 +60,8 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                       ?.relationships
                                       .pictures
                                       .length, // Number of pages to be built dynamically
-                                  itemBuilder: (BuildContext context, int index) {
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
                                     final image = canineProvider.selectedCanine
                                         ?.relationships.pictures[index];
                                     return Container(
@@ -84,14 +86,15 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                     decoration: BoxDecoration(
                                         color: const Color.fromRGBO(
                                             255, 255, 255, 0.49),
-                                        borderRadius: BorderRadius.circular(18.r)),
+                                        borderRadius:
+                                            BorderRadius.circular(18.r)),
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 10.w, vertical: 5.h),
                                     child: BodyTextPrimaryWithLineHeight(
                                       text:
-                                      "${canineProvider.selectedCanine!.relationships.pictures.isEmpty ? 0 : currentIndex + 1}/${canineProvider.selectedCanine?.relationships.pictures.length}",
+                                          "${canineProvider.selectedCanine!.relationships.pictures.isEmpty ? 0 : currentIndex + 1}/${canineProvider.selectedCanine?.relationships.pictures.length}",
                                       textColor:
-                                      const Color.fromRGBO(13, 13, 13, 1),
+                                          const Color.fromRGBO(13, 13, 13, 1),
                                       fontWeight: mediumFont,
                                     ),
                                   )
@@ -103,7 +106,8 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                               right: horizontalPadding.w,
                               left: horizontalPadding.w,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   InkWell(
                                     onTap: () {
@@ -114,8 +118,8 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                       width: 34.h,
                                       decoration: const BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color:
-                                          Color.fromRGBO(255, 255, 255, 0.49)),
+                                          color: Color.fromRGBO(
+                                              255, 255, 255, 0.49)),
                                       alignment: Alignment.center,
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(
@@ -133,7 +137,8 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                     width: 34.h,
                                     decoration: const BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: Color.fromRGBO(255, 255, 255, 0.49)),
+                                        color: Color.fromRGBO(
+                                            255, 255, 255, 0.49)),
                                     alignment: Alignment.center,
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
@@ -153,8 +158,8 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                       ),
                       SizedBox(height: 10.h),
                       Padding(
-                        padding:
-                        EdgeInsets.symmetric(horizontal: horizontalPadding.w),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: horizontalPadding.w),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -164,13 +169,14 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                 Row(
                                   children: [
                                     HeaderText(
-                                      text: canineProvider.selectedCanine?.name ??
-                                          "No Name",
+                                      text:
+                                          canineProvider.selectedCanine?.name ??
+                                              "No Name",
                                       isUpperCase: false,
                                       fontWeight: semiBoldFont,
                                       fontSize: 23,
                                       textColor:
-                                      const Color.fromRGBO(43, 43, 43, 1),
+                                          const Color.fromRGBO(43, 43, 43, 1),
                                     ),
                                     SizedBox(
                                       width: 5.w,
@@ -199,11 +205,11 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                     ),
                                     BodyTextPrimaryWithLineHeight(
                                       text: canineProvider.selectedCanine
-                                          ?.relationships.state ??
+                                              ?.relationships.state ??
                                           "No Location",
                                       fontSize: 13,
                                       textColor:
-                                      const Color.fromRGBO(98, 98, 98, 1),
+                                          const Color.fromRGBO(98, 98, 98, 1),
                                       fontWeight: mediumFont,
                                     ),
                                     SizedBox(
@@ -219,11 +225,11 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                     ),
                                     BodyTextPrimaryWithLineHeight(
                                       text: canineProvider.selectedCanine
-                                          ?.relationships.breed ??
+                                              ?.relationships.breed ??
                                           "No Bredd",
                                       fontSize: 13,
                                       textColor:
-                                      const Color.fromRGBO(98, 98, 98, 1),
+                                          const Color.fromRGBO(98, 98, 98, 1),
                                       fontWeight: mediumFont,
                                     ),
                                     SizedBox(
@@ -233,7 +239,9 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 8.h,),
+                            SizedBox(
+                              height: 8.h,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -245,11 +253,11 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                     ),
                                     BodyTextPrimaryWithLineHeight(
                                       text: canineProvider.selectedCanine
-                                          ?.relationships.breed ??
+                                              ?.relationships.breed ??
                                           "No Breed",
                                       fontSize: 13,
                                       textColor:
-                                      const Color.fromRGBO(98, 98, 98, 1),
+                                          const Color.fromRGBO(98, 98, 98, 1),
                                       fontWeight: mediumFont,
                                     ),
                                     SizedBox(
@@ -264,11 +272,12 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                       width: 4.w,
                                     ),
                                     BodyTextPrimaryWithLineHeight(
-                                      text: canineProvider.selectedCanine?.gender ??
+                                      text: canineProvider
+                                              .selectedCanine?.gender ??
                                           "No Gender",
                                       fontSize: 13,
                                       textColor:
-                                      const Color.fromRGBO(98, 98, 98, 1),
+                                          const Color.fromRGBO(98, 98, 98, 1),
                                       fontWeight: mediumFont,
                                     ),
                                     SizedBox(
@@ -298,8 +307,8 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                             SizedBox(
                               height: 10.h,
                             ),
-                            if (canineProvider
-                                .selectedCanine!.studParams?.contractBrief !=
+                            if (canineProvider.selectedCanine!.studParams
+                                    ?.contractBrief !=
                                 null)
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -310,10 +319,11 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                     isUpperCase: false,
                                   ),
                                   BodyTextPrimaryWithLineHeight(
-                                    text: canineProvider.selectedCanine!.studParams
-                                        ?.contractBrief ??
+                                    text: canineProvider.selectedCanine!
+                                            .studParams?.contractBrief ??
                                         "",
-                                    textColor: const Color.fromRGBO(76, 76, 76, 1),
+                                    textColor:
+                                        const Color.fromRGBO(76, 76, 76, 1),
                                   ),
                                   SizedBox(
                                     height: 15.h,
@@ -331,13 +341,14 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                     title: "",
                                     verticalPadding: 15,
                                     horizontalPadding: 10,
-                                    bgColor: const Color.fromRGBO(249, 249, 249, 1),
+                                    bgColor:
+                                        const Color.fromRGBO(249, 249, 249, 1),
                                     borderRadius: 12,
                                     widget: Column(
                                       children: [
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             const BodyTextPrimaryWithLineHeight(
                                               text: puppyDeal,
@@ -345,10 +356,10 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                             ),
                                             BodyTextPrimaryWithLineHeight(
                                               text: canineProvider
-                                                  .selectedCanine
-                                                  ?.studParams
-                                                  ?.puppyDealAmount ==
-                                                  null
+                                                          .selectedCanine
+                                                          ?.studParams
+                                                          ?.puppyDealAmount ==
+                                                      null
                                                   ? "No Deal"
                                                   : "NGN ${returnFormattedAmount(amount: canineProvider.selectedCanine!.studParams!.puppyDealAmount.toString())}",
                                               textColor: blackTextColor,
@@ -361,7 +372,7 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                         ),
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             const BodyTextPrimaryWithLineHeight(
                                               text: noPuppyDeal,
@@ -369,10 +380,10 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                             ),
                                             BodyTextPrimaryWithLineHeight(
                                               text: canineProvider
-                                                  .selectedCanine
-                                                  ?.studParams
-                                                  ?.noPuppyDealAmount ==
-                                                  null
+                                                          .selectedCanine
+                                                          ?.studParams
+                                                          ?.noPuppyDealAmount ==
+                                                      null
                                                   ? "No Deal"
                                                   : "NGN ${returnFormattedAmount(amount: canineProvider.selectedCanine!.studParams!.noPuppyDealAmount.toString())}",
                                               textColor: blackTextColor,
@@ -401,20 +412,22 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                                 ),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const BodyTextPrimaryWithLineHeight(
                                         text: "Pet owner",
-                                        textColor: Color.fromRGBO(130, 130, 130, 1),
+                                        textColor:
+                                            Color.fromRGBO(130, 130, 130, 1),
                                         fontSize: 11,
                                         fontWeight: mediumFont,
                                       ),
                                       BodyTextPrimaryWithLineHeight(
                                         text: canineProvider.selectedCanine
-                                            ?.relationships.owner.name ??
+                                                ?.relationships.owner.name ??
                                             "NAN",
                                         textColor:
-                                        const Color.fromRGBO(13, 13, 13, 1),
+                                            const Color.fromRGBO(13, 13, 13, 1),
                                         fontWeight: semiBoldFont,
                                       )
                                     ],
@@ -430,10 +443,11 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                               title: customerReviews,
                               onTap: () {},
                               padding: 0,
-                              titleTextColor: const Color.fromRGBO(13, 13, 13, 1),
+                              titleTextColor:
+                                  const Color.fromRGBO(13, 13, 13, 1),
                               titleFontWeight: semiBoldFont,
                               subTitleTextColor:
-                              const Color.fromRGBO(216, 155, 101, 1),
+                                  const Color.fromRGBO(216, 155, 101, 1),
                             ),
                             SizedBox(
                               height: 20.h,
@@ -463,17 +477,33 @@ class _SearchedDogDetailScreenState extends State<SearchedDogDetailScreen> {
                     ],
                   ),
                 )),
-
-                SizedBox(height: 10.h,),
-                Padding(padding: EdgeInsets.symmetric(
-                  horizontal: horizontalPadding.w
+                SizedBox(
+                  height: 10.h,
                 ),
-                child: MainButton("Cross Breed", (){
-                  if(canineProvider.selectedCanine?.gender.toString().toLowerCase() == male.toLowerCase()){
-                    navToWithScreenName(context: context, screen: const FemaleCanineScreen());
-                  }
-                },
-                color: canineProvider.selectedCanine?.gender.toString().toLowerCase() == male.toLowerCase() ? mainColor : const Color.fromRGBO(216, 155, 101, 0.5),),)
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: horizontalPadding.w),
+                  child: MainButton(
+                    "Cross Breed",
+                    () {
+                      canineProvider.addCrossDeals();
+                      if (canineProvider.selectedCanine?.gender
+                              .toString()
+                              .toLowerCase() ==
+                          male.toLowerCase()) {
+                        navToWithScreenName(
+                            context: context,
+                            screen: const FemaleCanineScreen());
+                      }
+                    },
+                    color: canineProvider.selectedCanine?.gender
+                                .toString()
+                                .toLowerCase() ==
+                            male.toLowerCase()
+                        ? mainColor
+                        : const Color.fromRGBO(216, 155, 101, 0.5),
+                  ),
+                )
               ],
             );
           })),

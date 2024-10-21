@@ -224,7 +224,8 @@ class WalletProvider extends ChangeNotifier {
     return fetched;
   }
 
-  final walletTagController = TextEditingController(text: kDebugMode ? "CC277615427" : "");
+  final walletTagController =
+      TextEditingController(text: kDebugMode ? "CC277615427" : "");
   bool transferringFund = false;
   Future<bool> transferFund(
       {required BuildContext context, required String pin}) async {
@@ -280,10 +281,11 @@ class WalletProvider extends ChangeNotifier {
 
   bool gettingUserDetails = false;
   RetrievedUserInfoModel? retrievedUserInfoModel;
-  void resetRetrieveUserInfo(){
+  void resetRetrieveUserInfo() {
     retrievedUserInfoModel = null;
     notifyListeners();
   }
+
   Future<bool> retrieveUserDetailsFromWalletTag(
       {required BuildContext context}) async {
     retrievedUserInfoModel = null;

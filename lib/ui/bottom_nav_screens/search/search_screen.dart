@@ -281,16 +281,21 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 )
                                               ],
                                             ),
-                                            
                                             Row(
                                               children: [
-                                                SvgPicture.asset(starRatingImgSvg),
-                                                SizedBox(width: 2.w,),
-                                                const BodyTextPrimaryWithLineHeight(text: "4.5",fontWeight: mediumFont,
-                                                textColor: Color.fromRGBO(76, 76, 76, 1),)
+                                                SvgPicture.asset(
+                                                    starRatingImgSvg),
+                                                SizedBox(
+                                                  width: 2.w,
+                                                ),
+                                                const BodyTextPrimaryWithLineHeight(
+                                                  text: "4.5",
+                                                  fontWeight: mediumFont,
+                                                  textColor: Color.fromRGBO(
+                                                      76, 76, 76, 1),
+                                                )
                                               ],
                                             ),
-
                                           ],
                                         )
                                       ],

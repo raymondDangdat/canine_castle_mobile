@@ -65,7 +65,7 @@ class _TransferScreenState extends State<TransferScreen> {
                                 if (value != null && value.length >= 11) {
                                   walletProver.retrieveUserDetailsFromWalletTag(
                                       context: context);
-                                }else{
+                                } else {
                                   walletProver.resetRetrieveUserInfo();
                                 }
                               },
@@ -77,17 +77,21 @@ class _TransferScreenState extends State<TransferScreen> {
                           ),
                         ],
                       ),
-
                       Padding(
-                        padding: EdgeInsets.only(
-                          top: 10
-                        ),
+                        padding: EdgeInsets.only(top: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            BodyTextPrimaryWithLineHeight(text: walletProver.gettingUserDetails ? "..." :  walletProver.retrievedUserInfoModel?.data.name ?? ''),
-                            if(walletProver.retrievedUserInfoModel?.data.name != null)
-                            SvgPicture.asset(accountRetrievedIcon),
+                            BodyTextPrimaryWithLineHeight(
+                                text: walletProver.gettingUserDetails
+                                    ? "..."
+                                    : walletProver.retrievedUserInfoModel?.data
+                                            .name ??
+                                        ''),
+                            if (walletProver
+                                    .retrievedUserInfoModel?.data.name !=
+                                null)
+                              SvgPicture.asset(accountRetrievedIcon),
                           ],
                         ),
                       ),
@@ -169,7 +173,9 @@ class _TransferScreenState extends State<TransferScreen> {
                 child: MainButton(
                   next,
                   () {
-                    if (walletProver.walletTagController.text.isEmpty || walletProver.retrievedUserInfoModel?.data.name == null) {
+                    if (walletProver.walletTagController.text.isEmpty ||
+                        walletProver.retrievedUserInfoModel?.data.name ==
+                            null) {
                       customSnackBar(context, "Enter a valid wallet tag");
                     } else if (walletProver.amountController.text.isEmpty) {
                       customSnackBar(context, "Enter a valid amount");

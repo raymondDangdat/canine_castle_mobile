@@ -1,8 +1,9 @@
+import 'package:canine_castle_mobile/utils/functions.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../Widgets/components.dart';
 import '../../../../Widgets/custom_text.dart';
 import '../../../../Widgets/title_widget.dart';
@@ -23,10 +24,14 @@ class RequestsTab extends StatelessWidget {
       child: Consumer<InboxProvider>(builder: (ctx, inboxProvider, child) {
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: horizontalPadding.w),
-          child: ListView.builder(
-              itemCount: inboxProvider.requests.length,
+          child: inboxProvider.gettingStudRequest ?
+          const CupertinoActivityIndicator() :
+              inboxProvider.studRequests.isEmpty ? const BodyTextPrimaryWithLineHeight(text: "No Requests Yet",
+              fontWeight: semiBoldFont, fontSize: 16,) :
+          ListView.builder(
+              itemCount: inboxProvider.studRequests.length,
               itemBuilder: (context, index) {
-                final request = inboxProvider.requests[index];
+                final request = inboxProvider.studRequests[index];
                 return Padding(
                   padding: EdgeInsets.only(bottom: 16.h),
                   child: InkWell(
@@ -68,7 +73,10 @@ class RequestsTab extends StatelessWidget {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(7.r),
                                 image: DecorationImage(
-                                    image: AssetImage(request.dogImg))),
+                                    image: NetworkImage(request.relationship.pets[1].relationships.pictures.isEmpty ? "" : request.relationship.pets[1].relationships.pictures[0]),
+                                fit: BoxFit.cover),
+
+                            ),
                           ),
                           SizedBox(
                             height: 16.h,
@@ -80,21 +88,23 @@ class RequestsTab extends StatelessWidget {
                                 width: 32.h,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(56.r),
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            request.requestUser.profileImg),
-                                        fit: BoxFit.cover)),
+                                    color: hintTextColor
+                                    // image: DecorationImage(
+                                    //     image: AssetImage(""),
+                                    //     fit: BoxFit.cover)
+                                ),
                               ),
                               SizedBox(
                                 width: 12.w,
                               ),
                               Expanded(
                                   child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
                                       TitleWidget(
-                                        title: request.requestUser.userName,
+                                        title: request.relationship.pets[1].relationships.owner.name,
                                         textColor: blackTextColor,
                                         fontWeight: mediumFont,
                                         fontSize: 14,
@@ -105,15 +115,15 @@ class RequestsTab extends StatelessWidget {
                                       CustomContainerButton(
                                         onTap: () {},
                                         title:
-                                            request.status ? "Accepted" : "New",
-                                        textColor: request.status
+                                            request.status.toString().capitalize(),
+                                        textColor: request.status != "pending"
                                             ? const Color(0xFF301F10)
                                             : const Color(0xFFD89B65),
                                         borderRadius: 20,
-                                        bgColor: request.status
+                                        bgColor: request.status != "pending"
                                             ? const Color(0xFFF1EDE9)
                                             : const Color(0xFFFBF5F0),
-                                        verticalPadding: 6,
+                                        verticalPadding: 2,
                                         horizontalPadding: 6,
                                         fontSize: 10,
                                         fontWeight: mediumFont,
@@ -121,7 +131,7 @@ class RequestsTab extends StatelessWidget {
                                     ],
                                   ),
                                   BodyTextPrimaryWithLineHeight(
-                                    text: request.requestMessage,
+                                    text: request.message,
                                     fontWeight: mediumFont,
                                     fontSize: 13,
                                     textColor: const Color(0xFF626262),

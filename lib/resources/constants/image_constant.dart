@@ -64,7 +64,11 @@ const canineImgEmptyState = "assets/images/canine_img_empty_state.png";
 const toggleOn = "assets/images/toggle_on.svg";
 const toggleOff = "assets/images/toggle_off.svg";
 const removeCanineIcon = "assets/images/remove_canine_image_icon.svg";
+const addOfferIcon = "assets/images/add_offer_icon.svg";
 const cimgIcon = "assets/images/cimg.svg";
+const moreIconVertical = "assets/images/more_icon_vertical.svg";
+const dogRequestInformationIcon =
+    "assets/images/dog_requestion_information_icon.svg";
 const line = "assets/images/line.svg";
 const subscriptionIcon = "assets/images/subscription_icon.svg";
 const copy = "assets/images/copy.svg";

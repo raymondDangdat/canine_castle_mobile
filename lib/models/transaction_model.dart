@@ -79,7 +79,8 @@ class TransactionData {
         status: json["status"],
         charges: json["charges"],
         location: json["location"],
-        payload: json["payload"] == null ? null : Payload.fromJson(json["payload"]),
+        payload:
+            json["payload"] == null ? null : Payload.fromJson(json["payload"]),
         slug: json["slug"],
         relationships: Relationships.fromJson(json["relationships"]),
         createdAt: DateTime.parse(json["created_at"]),

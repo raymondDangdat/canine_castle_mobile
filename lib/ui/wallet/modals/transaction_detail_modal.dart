@@ -69,29 +69,33 @@ Future showTransactionDetailModal(BuildContext importedContext) {
                           const SizedBox(height: 30),
                           Container(
                             width: double.infinity,
-                            decoration:  BoxDecoration(
+                            decoration: BoxDecoration(
                               color: orangeShade2,
-                              border: Border.all(
-                                color: mainColor
-                              ),
+                              border: Border.all(color: mainColor),
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(7),
                               ),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 20
-                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 20),
                               child: Column(
                                 children: [
                                   CustomText(
-                                    text: walletProvider.selectedTransaction?.type ?? "",
+                                    text: walletProvider
+                                            .selectedTransaction?.type ??
+                                        "",
                                     textColor: black,
                                     fontSize: 13,
                                   ),
                                   CustomText(
-                                    text: 'NGN ${moneyFormat.format(double.parse(walletProvider.selectedTransaction?.amount == null ? '00' : walletProvider.selectedTransaction!.amount.toString()))}',
-                                    textColor: walletProvider.selectedTransaction?.type.toString() == creditTransactionType ? black : red,
+                                    text:
+                                        'NGN ${moneyFormat.format(double.parse(walletProvider.selectedTransaction?.amount == null ? '00' : walletProvider.selectedTransaction!.amount.toString()))}',
+                                    textColor: walletProvider
+                                                .selectedTransaction?.type
+                                                .toString() ==
+                                            creditTransactionType
+                                        ? black
+                                        : red,
                                     fontSize: 25,
                                     fontWeight: boldFont,
                                   ),

@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -284,10 +285,24 @@ extension StringExtension on String {
 }
 
 String returnFormattedAmount({required String amount}) {
-  debugPrint("Amount to format  $amount");
+  // debugPrint("Amount to format  $amount");
   String thisAmount = amount.replaceAll(",", "");
-  debugPrint("Trimmed Amount::: $thisAmount");
+  // debugPrint("Trimmed Amount::: $thisAmount");
   return double.parse(thisAmount) >= 100
       ? moneyFormat.format(double.parse(thisAmount))
       : double.parse(thisAmount).toStringAsFixed(2);
+}
+
+String returnFormattedDate(String date) {
+  final convertedDate = DateTime.parse(date);
+  String newDate =  "${convertedDate.day}, ${convertedDate.month}, ${convertedDate.year}";
+  return Jiffy.parseFromDateTime(DateTime.parse(date)).yMMMMd;
+
+}
+
+String returnFormattedDateAndTime(String date) {
+  final convertedDate = DateTime.parse(date);
+  String newDate =  "${convertedDate.day}, ${convertedDate.month}, ${convertedDate.year}";
+  return Jiffy.parseFromDateTime(DateTime.parse(date)).yMMMdjm;
+
 }
