@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:canine_castle_mobile/providers/auth_provider.dart';
+import 'package:canine_castle_mobile/providers/dashboard_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Timer? _timer;
 
   late AuthProvider auth;
+  late DashboardProvider dashboardProvider;
   _startDelay() {
     _timer = Timer(const Duration(seconds: 2), _goNext);
   }
@@ -43,6 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     auth = context.watch<AuthProvider>();
+    dashboardProvider = context.watch<DashboardProvider>();
     return Scaffold(
       backgroundColor: splashBgColor,
       body: SafeArea(
@@ -91,6 +94,7 @@ class _SplashScreenState extends State<SplashScreen> {
             bool fetchedProfile = await auth.getProfile(context: context);
 
             if (fetchedProfile) {
+              dashboardProvider.getDashboardInfo(context: context);
               navToWithScreenName(
                   context: context,
                   screen: const BottomNavScreen(),

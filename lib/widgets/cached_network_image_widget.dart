@@ -26,17 +26,17 @@ class CachedNetworkImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      height: height.h,
-      width: width == null ? width : width!.w,
+      height: height,
+      width: width,
       imageUrl: imageUrl,
       imageBuilder: (context, imageProvider) => Container(
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(topLeftRadius.r),
-            bottomLeft: Radius.circular(bottomLeftRadius.r),
-            topRight: Radius.circular(topRightRadius.r),
-            bottomRight: Radius.circular(bottomRightRadius.r),
+            topLeft: Radius.circular(topLeftRadius),
+            bottomLeft: Radius.circular(bottomLeftRadius),
+            topRight: Radius.circular(topRightRadius),
+            bottomRight: Radius.circular(bottomRightRadius),
           ),
           image: DecorationImage(
             image: imageProvider,

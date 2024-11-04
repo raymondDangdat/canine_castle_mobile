@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:canine_castle_mobile/models/canines_model.dart';
 import 'package:canine_castle_mobile/models/pet_breed_model.dart';
+import 'package:canine_castle_mobile/models/single_canine_model.dart';
 import 'package:canine_castle_mobile/models/state_model.dart';
 import 'package:canine_castle_mobile/resources/constants/string_constants.dart';
 import 'package:canine_castle_mobile/utils/functions.dart';
@@ -10,7 +11,6 @@ import 'package:http_parser/http_parser.dart';
 import '../keys/keys.dart';
 import '../models/lat_long_model.dart';
 import '../models/place_prediction_model.dart';
-import '../models/stud_request_model.dart';
 import '../resources/constants/connectivity.dart';
 import '../resources/constants/endpoints.dart';
 import '../services/api_client.dart';
@@ -23,6 +23,36 @@ class CanineProvider extends ChangeNotifier {
   void toggleMakeCanineProfilePublic() {
     makeCanineProfilePublic = !makeCanineProfilePublic;
     notifyListeners();
+  }
+
+  DateTime selectedFromDate = DateTime.now();
+  DateTime selectedToDate = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day + 1);
+
+  Future<void> selectFromDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedFromDate,
+        firstDate: DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedFromDate) {
+      selectedFromDate = picked;
+      notifyListeners();
+    }
+  }
+
+  Future<void> selectToDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedToDate,
+        firstDate: DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedToDate) {
+      selectedToDate = picked;
+      notifyListeners();
+    }
   }
 
   void toggleCanineAPedigree() {
@@ -43,6 +73,7 @@ class CanineProvider extends ChangeNotifier {
   }
 
   final nameOfCanineController = TextEditingController();
+  final canineAgeController = TextEditingController();
   final addressController = TextEditingController();
   final descriptionController = TextEditingController();
   final puppyDealAmountController = TextEditingController();
@@ -176,8 +207,8 @@ class CanineProvider extends ChangeNotifier {
     return fetched;
   }
 
-  CanineData? selectedCanine;
-  void updateSelectedCanine(CanineData? canine) {
+  SingleCanineData? selectedCanine;
+  void updateSelectedCanine(SingleCanineData? canine) {
     selectedCanine = canine;
     notifyListeners();
   }
@@ -209,7 +240,6 @@ class CanineProvider extends ChangeNotifier {
     if (connected) {
       gettingCanines = true;
       myCanines = [];
-      allCanines = [];
       String url = isFetchAll ? "pets/all" : "pets/all?my-canines=all";
       notifyListeners();
       try {
@@ -259,15 +289,61 @@ class CanineProvider extends ChangeNotifier {
     return fetched;
   }
 
+  bool gettingSingleCanine = false;
+  Future<bool> getSingleCanine(
+      {required BuildContext context, required String canineSlug}) async {
+    notifyListeners();
+    bool fetched = false;
+    final connected = await connectionChecker();
+    if (connected) {
+      gettingSingleCanine = true;
+      String url = "pets/single/$canineSlug";
+      notifyListeners();
+      try {
+        if (context.mounted) {
+          (bool, String) requestFetched = await ApiClient().getRequest(url,
+              context: context,
+              printResponseBody: false,
+              requestName: "Get Canines");
+          gettingSingleCanine = false;
+          if (requestFetched.$1) {
+            final singleCanineModel =
+                singleCanineModelFromJson(requestFetched.$2);
+            selectedCanine = singleCanineModel.data;
+            fetched = true;
+            notifyListeners();
+          } else {
+            gettingSingleCanine = false;
+            notifyListeners();
+          }
+        }
+      } on SocketException catch (_) {
+        resMessage = "Internet connection is not available";
+        gettingSingleCanine = false;
+        notifyListeners();
+      } catch (e) {
+        resMessage = "Please try again";
+        gettingSingleCanine = false;
+        debugPrint("Get Canines Exception::::::::${e.toString()}");
+        notifyListeners();
+      }
+    } else {
+      resMessage = "Internet connection is not available";
+      gettingSingleCanine = false;
+      notifyListeners();
+    }
+    return fetched;
+  }
 
   bool addingCanine = false;
   String addedCanineID = "";
   bool isErrorMessage = true;
 
-  void resetIsSuccessMessage(){
+  void resetIsSuccessMessage() {
     isErrorMessage = true;
     notifyListeners();
   }
+
   Future<bool> addCanine({required BuildContext context}) async {
     notifyListeners();
     bool fetched = false;
@@ -277,7 +353,7 @@ class CanineProvider extends ChangeNotifier {
       "gender": selectedGender.toLowerCase(),
       "breed": selectedBreed?.id ?? "",
       "address": addressController.text,
-      "dob": "2023-01-22",
+      "age": canineAgeController.text,
       "contractBrief": descriptionController.text,
       "puppyDealAmount": puppyDealAmountController.text.replaceAll(",", ""),
       "noPuppyDealAmount": noPuppyDealAmountController.text.replaceAll(",", ""),
@@ -339,18 +415,23 @@ class CanineProvider extends ChangeNotifier {
     return fetched;
   }
 
-
   Future<bool> sendStudRequest({required BuildContext context}) async {
     isErrorMessage = true;
     notifyListeners();
     bool fetched = false;
     final connected = await connectionChecker();
     final body = {
-      "deal" : selectedCrossDeal?.type,
-      "offerAmount" : yourOfferController.text.isEmpty ? selectedCrossDeal?.amount : yourOfferController.text.replaceAll(",", ""),
-      "message" : messageController.text,
-      "male" : selectedCanine?.id,
-      "female" : selectedFemaleDog?.id
+      "deal": selectedCrossDeal?.type,
+      "offerAmount": yourOfferController.text.isEmpty
+          ? selectedCrossDeal?.amount
+          : yourOfferController.text.replaceAll(",", ""),
+      "message": messageController.text,
+      "male": selectedCanine?.id,
+      "female": selectedFemaleDog?.id,
+      "expectedDateFrom":
+          "${selectedFromDate.year}-${selectedFromDate.month < 10 ? '0${selectedFromDate.month}' : selectedFromDate.month}-${selectedFromDate.day < 10 ? '0${selectedFromDate.day}' : selectedFromDate.day}",
+      "expectedDateTo":
+          "${selectedToDate.year}-${selectedToDate.month < 10 ? '0${selectedToDate.month}' : selectedToDate.month}-${selectedToDate.day < 10 ? '0${selectedToDate.day}' : selectedToDate.day}"
     };
     if (connected) {
       String url = "studs/create";
@@ -359,21 +440,21 @@ class CanineProvider extends ChangeNotifier {
       try {
         showAppLoader(context, message: "Sending Request...");
         if (context.mounted) {
-            (bool, String) requestFetched = await ApiClient().postRequest(url,
-                context: context,
-                body: body,
-                printResponseBody: true,
-                requestName: "Send Stud Request");
-            popLoader(context: context, isGoRouterScreen: false);
-            if (requestFetched.$1) {
-              fetched = true;
-              isErrorMessage = false;
-              resMessage = "Stud request created successfully";
-              notifyListeners();
-            } else {
-              resMessage = requestFetched.$2;
-              notifyListeners();
-            }
+          (bool, String) requestFetched = await ApiClient().postRequest(url,
+              context: context,
+              body: body,
+              printResponseBody: true,
+              requestName: "Send Stud Request");
+          popLoader(context: context, isGoRouterScreen: false);
+          if (requestFetched.$1) {
+            fetched = true;
+            isErrorMessage = false;
+            resMessage = "Stud request created successfully";
+            notifyListeners();
+          } else {
+            resMessage = requestFetched.$2;
+            notifyListeners();
+          }
         }
       } on SocketException catch (_) {
         resMessage = "Internet connection is not available";

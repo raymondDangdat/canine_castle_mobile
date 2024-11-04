@@ -11,11 +11,29 @@ const touchId = "assets/images/touch_id.svg";
 const closeIconSvg = "assets/images/close_icon.svg";
 const checkedIconSvg = "assets/images/checked_icon.svg";
 const uncheckedIconSvg = "assets/images/unchecked_icon.svg";
+const subPlanFeatureIcon = "assets/images/sub_plan_feature_icon.svg";
+const bankAccountIcon = "assets/images/bank_account_icon.svg";
+const viewTransactionHistoryIcon =
+    "assets/images/view_transaction_history_icon.svg";
+const debitTransactionIcon = "assets/images/debit_transaction_icon.svg";
+const depositTransactionIcon = "assets/images/deposit_transaction_icon.svg";
+const dashboardLocationIcon = "assets/images/dashboard_location_icon.svg";
+const canineOfTheDayBreedIcon = "assets/images/canine_of_the_day_breed_ico.svg";
+const canineOfTheDayLocationIcon =
+    "assets/images/canine_of_the_day_location_icon.svg";
+const canineOfTheDayRatingStarIcon =
+    "assets/images/canine_of_the_day_rating_star.svg";
+const canineOfTheDayGenderIcon =
+    "assets/images/canine_of_the_day_female_icon.svg";
+const canineAroundYouStarIcon = "assets/images/canine_around_you_star_icon.svg";
+const forYouMaleIcon = "assets/images/for_you_male_icon.svg";
+const forYouLocationIcon = "assets/images/for_you_location_icon.svg";
 
 const splashScreenLogo = "assets/images/splash_logo.png";
 const nigerianFlag = "assets/images/nigerian_flag.png";
 const dropdownIconSvg = "assets/images/dropdown_arrow.svg";
 const errorIcon = "assets/images/error_icon.svg";
+const planIcon = "assets/images/plan_icon.svg";
 const successIcon = "assets/images/success_icon.svg";
 const backArrowSvg = "assets/images/back_arrow.svg";
 const passwordChangedImg = "assets/images/password_changed_img.png";

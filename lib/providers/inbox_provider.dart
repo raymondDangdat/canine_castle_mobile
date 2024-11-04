@@ -6,11 +6,10 @@ import '../resources/constants/connectivity.dart';
 import '../services/api_client.dart';
 
 class InboxProvider extends ChangeNotifier {
-
   String inboxTab = crossDealTab;
 
   String resMessage = "";
-  void clear(){
+  void clear() {
     resMessage = "";
     notifyListeners();
   }
@@ -28,12 +27,18 @@ class InboxProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  String? selectedAvailableDate;
 
+  void updateSelectedAvailableDate(String availableDate) {
+    selectedAvailableDate = availableDate;
+    notifyListeners();
+  }
 
   bool gettingStudRequest = false;
   List<RequestData> studRequests = [];
-  Future<bool> getStudRequests(
-      {required BuildContext context,}) async {
+  Future<bool> getStudRequests({
+    required BuildContext context,
+  }) async {
     notifyListeners();
     bool fetched = false;
     final connected = await connectionChecker();
@@ -50,7 +55,8 @@ class InboxProvider extends ChangeNotifier {
               requestName: "Get Stud Requests");
           gettingStudRequest = false;
           if (requestFetched.$1) {
-            final studRequestModel = studRequestModelFromJson(requestFetched.$2);
+            final studRequestModel =
+                studRequestModelFromJson(requestFetched.$2);
             studRequests = studRequestModel.data;
             fetched = true;
             notifyListeners();
@@ -83,9 +89,9 @@ class InboxProvider extends ChangeNotifier {
   Future<bool> updateStudRequest(
       {required BuildContext context, required String status}) async {
     final body = {
-      "status" : status, //'accepted', 'done', 'completed', 'declined',
-      "studDate" : "${selectedRequest!.createdAt.year}-${selectedRequest!.createdAt.month}-${selectedRequest!.createdAt.day}",
-      "remarks" : selectedRequest!.message
+      "status": status, //'accepted', 'done', 'completed', 'declined',
+      "studDate": "$selectedAvailableDate",
+      "remarks": selectedRequest!.message
     };
 
     isErrorMessage = true;
@@ -101,7 +107,7 @@ class InboxProvider extends ChangeNotifier {
         if (context.mounted) {
           (bool, String) requestFetched = await ApiClient().patchRequest(url,
               context: context,
-              printResponseBody: false,
+              printResponseBody: true,
               body: body,
               requestName: "Get Stud Requests");
           updatingStudRequest = false;

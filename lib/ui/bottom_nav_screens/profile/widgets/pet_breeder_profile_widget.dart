@@ -48,6 +48,7 @@ class PetBreederProfileWidget extends StatelessWidget {
                 onTap: () {
                   authProvider.getProfile(context: context);
                   walletProvider.getTransactions(context: context);
+                  walletProvider.getBankAccounts(context: context);
                   navToWithScreenName(
                       context: context, screen: const WalletScreen());
                 },
@@ -63,7 +64,9 @@ class PetBreederProfileWidget extends StatelessWidget {
                 iconName: petIcon),
             ProfileItemWidget(
                 onTap: () {
-                  walletProvider.getSubscriptionPlans(context: context);
+                  walletProvider.getSubscriptionPlans(
+                      context: context,
+                      userType: authProvider.userProfile?.data.role ?? "");
                   navToWithScreenName(
                       context: context, screen: const SubscriptionScreen());
                 },

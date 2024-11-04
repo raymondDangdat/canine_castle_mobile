@@ -165,7 +165,9 @@ class _SearchScreenState extends State<SearchScreen> {
                               final canine = canineProvider.allCanines[index];
                               return GestureDetector(
                                   onTap: () async {
-                                    canineProvider.updateSelectedCanine(canine);
+                                    canineProvider.getSingleCanine(
+                                        context: context,
+                                        canineSlug: canine.slug ?? "");
                                     navToWithScreenName(
                                         context: context,
                                         screen:

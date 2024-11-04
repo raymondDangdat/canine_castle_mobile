@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:canine_castle_mobile/models/stud_request_model.dart';
 import 'package:canine_castle_mobile/resources/navigation_utils.dart';
 import 'package:canine_castle_mobile/ui/login_screen/login_screen.dart';
 import 'package:file_picker/file_picker.dart';
@@ -295,14 +296,65 @@ String returnFormattedAmount({required String amount}) {
 
 String returnFormattedDate(String date) {
   final convertedDate = DateTime.parse(date);
-  String newDate =  "${convertedDate.day}, ${convertedDate.month}, ${convertedDate.year}";
+  String newDate =
+      "${convertedDate.day}, ${convertedDate.month}, ${convertedDate.year}";
   return Jiffy.parseFromDateTime(DateTime.parse(date)).yMMMMd;
-
 }
 
 String returnFormattedDateAndTime(String date) {
   final convertedDate = DateTime.parse(date);
-  String newDate =  "${convertedDate.day}, ${convertedDate.month}, ${convertedDate.year}";
+  String newDate =
+      "${convertedDate.day}, ${convertedDate.month}, ${convertedDate.year}";
   return Jiffy.parseFromDateTime(DateTime.parse(date)).yMMMdjm;
+}
 
+bool returnIsMaleDogOwner(List<Pet> pets) {
+  bool isMaleDogOwner = false;
+  for (int i = 0; i < pets.length; i++) {
+    debugPrint(
+        "Dog gender::::::::${pets[i].gender} is owner::::${pets[i].isOwner}");
+    if (pets[i].isOwner &&
+        pets[i].gender.toString().toLowerCase() == male.toLowerCase()) {
+      debugPrint("Is Male Dog owner:::::::::${pets[i].isOwner}");
+      isMaleDogOwner = true;
+    }
+  }
+  debugPrint("Is Male Dog owner:::::: $isMaleDogOwner");
+
+  return isMaleDogOwner;
+}
+
+Pet? returnMalePet(List<Pet> pets) {
+  Pet? malePet;
+  for (int i = 0; i < pets.length; i++) {
+    debugPrint(
+        "Dog gender::::::::${pets[i].gender} is owner::::${pets[i].isOwner}");
+    if (pets[i].gender.toString().toLowerCase() == male.toLowerCase()) {
+      debugPrint("Is Male Dog owner:::::::::${pets[i].isOwner}");
+      malePet = pets[i];
+    }
+  }
+  debugPrint("Is Male Dog :::::: ${malePet?.gender}");
+
+  return malePet;
+}
+
+Pet? returnFemalePet(List<Pet> pets) {
+  Pet? femalePet;
+  for (int i = 0; i < pets.length; i++) {
+    debugPrint("Dog gender::::::::${pets[i].gender}");
+    if (pets[i].gender.toString().toLowerCase() != male.toLowerCase()) {
+      debugPrint("Is Female Dog owner:::::::::");
+      femalePet = pets[i];
+    }
+  }
+  debugPrint("Is Female Dog :::::: ${femalePet?.gender}");
+  return femalePet;
+}
+
+String maskAccountNumberString(String input) {
+  if (input.length != 10) {
+    return "Invalid String";
+  }
+  return '${input.substring(0, 4)}****${input.substring(8)}';
 }

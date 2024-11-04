@@ -1,3 +1,4 @@
+import 'package:canine_castle_mobile/providers/dashboard_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -145,8 +146,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(
                         height: 24.h,
                       ),
-                      Consumer<AuthProvider>(
-                          builder: (ctx, authProvider, child) {
+                      Consumer2<AuthProvider, DashboardProvider>(builder:
+                          (ctx, authProvider, dashboardProvider, child) {
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           if (authProvider.resMessage != '') {
                             customSnackBar(context, authProvider.resMessage);
@@ -187,6 +188,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                             screen:
                                                 const VCNVerificationScreen());
                                       } else {
+                                        dashboardProvider.getDashboardInfo(
+                                            context: context);
                                         navToWithScreenName(
                                             context: context,
                                             isPushAndRemoveUntil: true,

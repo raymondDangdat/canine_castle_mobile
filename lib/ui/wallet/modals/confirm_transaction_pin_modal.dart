@@ -35,6 +35,15 @@ Future showConfirmTransactionPINModal(BuildContext importedContext,
           ),
           child: Consumer2<WalletProvider, AuthProvider>(
               builder: (ctx, walletProvider, authProvider, child) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (walletProvider.resMessage != '') {
+                customSnackBar(context, walletProvider.resMessage,
+                    isError: walletProvider.isError);
+
+                ///Clear the response message to avoid duplicate
+                walletProvider.clear();
+              }
+            });
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: horizontalPadding.w),
               child: Column(
@@ -130,9 +139,10 @@ Future showConfirmTransactionPINModal(BuildContext importedContext,
                                       await walletProvider.createPIN(
                                           context: context,
                                           pin: confirmController.text);
-                                  authProvider.getProfile(context: context);
+                                  authProvider.getProfile(
+                                      context: importedContext);
                                   if (pinCreated) {
-                                    Navigator.pop(context);
+                                    Navigator.pop(importedContext);
                                   }
                                 } else {
                                   customSnackBar(context, "Confirm your PIN");

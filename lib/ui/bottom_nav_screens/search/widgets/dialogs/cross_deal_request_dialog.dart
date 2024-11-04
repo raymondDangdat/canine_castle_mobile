@@ -20,7 +20,9 @@ Future<void> showCrossDealDialog(
   showDialog(
       barrierDismissible: barrierDismissible,
       context: importedContext,
-      builder: (BuildContext context) => CrossDealRequestDialog(importedContext: importedContext,));
+      builder: (BuildContext context) => CrossDealRequestDialog(
+            importedContext: importedContext,
+          ));
 }
 
 class CrossDealRequestDialog extends StatefulWidget {
@@ -70,67 +72,78 @@ class _CrossDealRequestDialogState extends State<CrossDealRequestDialog> {
                 fontSize: 16,
                 fontWeight: semiBoldFont,
               ),
-              SizedBox(height: 8.h,),
-              Consumer<CanineProvider>(builder: (ctx, canineProvider, child) {
-                  return RichText(
-                    textAlign: TextAlign.start,
-                    text: TextSpan(
-                      text: "Note that upon sending request, a sum of  ",
-                      style: getRichTextStyle(
-                          fontSize: 12,
-                          textColor: black,
-                          fontWeight: regularFont),
-                      children: <TextSpan>[
-                        TextSpan(
-                            style: getCustomTextStyle(
-                                fontSize: 12,
-                                textColor: black,
-                                fontWeight: boldFont),
-                            text:
-                            " N${returnFormattedAmount(amount: canineProvider.selectedCrossDeal!.amount)}"),
-                        TextSpan(
-                            style: getCustomTextStyle(
-                                fontSize: 12,
-                                textColor: black,
-                                fontWeight: regularFont),
-                            text: " will be deducted from your wallet until the deal has been confirmed"),
-                      ],
-                    ),
-                  );
-                }
+              SizedBox(
+                height: 8.h,
               ),
-              
-              SizedBox(height: 20.h,),
+              Consumer<CanineProvider>(builder: (ctx, canineProvider, child) {
+                return RichText(
+                  textAlign: TextAlign.start,
+                  text: TextSpan(
+                    text: "Note that upon sending request, a sum of  ",
+                    style: getRichTextStyle(
+                        fontSize: 12,
+                        textColor: black,
+                        fontWeight: regularFont),
+                    children: <TextSpan>[
+                      TextSpan(
+                          style: getCustomTextStyle(
+                              fontSize: 12,
+                              textColor: black,
+                              fontWeight: boldFont),
+                          text:
+                              " N${returnFormattedAmount(amount: canineProvider.selectedCrossDeal!.amount)}"),
+                      TextSpan(
+                          style: getCustomTextStyle(
+                              fontSize: 12,
+                              textColor: black,
+                              fontWeight: regularFont),
+                          text:
+                              " will be deducted from your wallet until the deal has been confirmed"),
+                    ],
+                  ),
+                );
+              }),
+              SizedBox(
+                height: 20.h,
+              ),
               Consumer<CanineProvider>(builder: (ctx, canineProvider, child) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (canineProvider.resMessage != '') {
-                    customSnackBar(context, canineProvider.resMessage, isError: canineProvider.isErrorMessage);
+                    customSnackBar(context, canineProvider.resMessage,
+                        isError: canineProvider.isErrorMessage);
 
                     ///Clear the response message to avoid duplicate
                     canineProvider.clear();
                   }
                 });
-                  return Row(
-                    children: [
-                      Expanded(child: MainButton("Cancel", (){
+                return Row(
+                  children: [
+                    Expanded(
+                        child: MainButton(
+                      "Cancel",
+                      () {
                         Navigator.pop(context);
                       },
                       color: const Color(0xFFFBF5F0),
-                      textColor: mainColor,)),
-                      SizedBox(width: 10.w,),
-                      Expanded(child: MainButton("Send", () async{
-                        final sent = await canineProvider.sendStudRequest(context: widget.importedContext);
+                      textColor: mainColor,
+                    )),
+                    SizedBox(
+                      width: 10.w,
+                    ),
+                    Expanded(
+                        child: MainButton("Send", () async {
+                      final sent = await canineProvider.sendStudRequest(
+                          context: widget.importedContext);
 
-                        debugPrint("Request Sent::: $sent");
-                        if(sent){
-                          Navigator.pop(widget.importedContext);
-                          Navigator.pop(context);
-                        }
-                      })),
-                    ],
-                  );
-                }
-              )
+                      debugPrint("Request Sent::: $sent");
+                      if (sent) {
+                        Navigator.pop(widget.importedContext);
+                        Navigator.pop(context);
+                      }
+                    })),
+                  ],
+                );
+              })
             ],
           ),
         ));

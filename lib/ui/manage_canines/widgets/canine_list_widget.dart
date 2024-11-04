@@ -37,7 +37,8 @@ class CaninesListWidget extends StatelessWidget {
                           right: horizontalPadding.w),
                       child: InkWell(
                         onTap: () {
-                          canineProvider.updateSelectedCanine(canine);
+                          canineProvider.getSingleCanine(
+                              context: context, canineSlug: canine.slug ?? "");
                           navToWithScreenName(
                               context: context,
                               screen: const CanineDetailScreen());

@@ -206,6 +206,22 @@ class _AddCanineScreenState extends State<AddCanineScreen> {
                         SizedBox(
                           height: 10.h,
                         ),
+                        const LabelWidget(label: "How old is you canine?"),
+                        Row(
+                          children: [
+                            Expanded(
+                                child: CustomField(
+                              "4",
+                              canineProvider.canineAgeController,
+                              type: const TextInputType.numberWithOptions(
+                                  signed: true),
+                              formatters: numbersOnlyFormat,
+                            ))
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
                         const LabelWidget(label: breed),
                         CustomDropdownButton(
                           title: canineProvider.selectedBreed == null

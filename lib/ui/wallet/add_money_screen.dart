@@ -3,7 +3,6 @@ import 'package:canine_castle_mobile/resources/constants/dimension_constants.dar
 import 'package:canine_castle_mobile/resources/constants/string_constants.dart';
 import 'package:canine_castle_mobile/resources/navigation_utils.dart';
 import 'package:canine_castle_mobile/ui/wallet/payment_screen.dart';
-import 'package:canine_castle_mobile/ui/wallet/transfer_summary_modal.dart';
 import 'package:canine_castle_mobile/utils/constants.dart';
 import 'package:canine_castle_mobile/widgets/constant_widgets.dart';
 import 'package:canine_castle_mobile/widgets/custom_appbar.dart';

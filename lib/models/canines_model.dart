@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 
 CaninesModel caninesModelFromJson(String str) =>
@@ -90,7 +88,7 @@ class DatumRelationships {
   dynamic breed;
   dynamic state;
   dynamic city;
-  Owner owner;
+  Owner? owner;
   List<String> pictures;
 
   DatumRelationships({
@@ -106,7 +104,7 @@ class DatumRelationships {
         breed: json["breed"],
         state: json["state"],
         city: json["city"],
-        owner: Owner.fromJson(json["owner"]),
+        owner: json["owner"] == null ? null : Owner.fromJson(json["owner"]),
         pictures: List<String>.from(json["pictures"].map((x) => x)),
       );
 }
@@ -164,8 +162,8 @@ class StudParams {
 
   factory StudParams.fromJson(Map<String, dynamic> json) => StudParams(
         contractBrief: json["contract_brief"],
-        puppyDealAmount: json["puppy_deal_amount"],
-        noPuppyDealAmount: json["no_puppy_deal_amount"],
+        puppyDealAmount: json["puppy_deal_amount"].toString(),
+        noPuppyDealAmount: json["no_puppy_deal_amount"].toString(),
       );
 }
 

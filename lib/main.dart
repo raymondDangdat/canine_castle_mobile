@@ -1,5 +1,6 @@
 import 'package:canine_castle_mobile/providers/auth_provider.dart';
 import 'package:canine_castle_mobile/providers/canine_provider.dart';
+import 'package:canine_castle_mobile/providers/dashboard_provider.dart';
 import 'package:canine_castle_mobile/providers/in_app_browser_provider.dart';
 import 'package:canine_castle_mobile/providers/inbox_provider.dart';
 import 'package:canine_castle_mobile/providers/search_provider.dart';
@@ -39,6 +40,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => CanineProvider()),
       ChangeNotifierProvider(create: (context) => WalletProvider()),
       ChangeNotifierProvider(create: (context) => InAppBrowserProvider()),
+      ChangeNotifierProvider(create: (context) => DashboardProvider()),
     ],
     child: const MyApp(),
   ));

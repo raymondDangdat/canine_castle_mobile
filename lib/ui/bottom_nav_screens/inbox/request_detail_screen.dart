@@ -1,3 +1,4 @@
+import 'package:canine_castle_mobile/providers/auth_provider.dart';
 import 'package:canine_castle_mobile/ui/bottom_nav_screens/inbox/widgets/modals/how_stud_crossing_works_modal.dart';
 import 'package:canine_castle_mobile/utils/functions.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +24,8 @@ class RequestDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-          child: Consumer<InboxProvider>(builder: (ctx, inboxProvider, child) {
+      body: SafeArea(child: Consumer2<InboxProvider, AuthProvider>(
+          builder: (ctx, inboxProvider, authProvider, child) {
         return Column(
           children: [
             const TopPadding(),
@@ -45,10 +46,10 @@ class RequestDetailScreen extends StatelessWidget {
                     width: 32.h,
                     decoration: BoxDecoration(
                       color: hintTextColor,
-                        borderRadius: BorderRadius.circular(56.r),
-                        // image: const DecorationImage(
-                        //     image: AssetImage(""),
-                        //     fit: BoxFit.cover)
+                      borderRadius: BorderRadius.circular(56.r),
+                      // image: const DecorationImage(
+                      //     image: AssetImage(""),
+                      //     fit: BoxFit.cover)
                     ),
                   ),
                   SizedBox(
@@ -59,8 +60,8 @@ class RequestDetailScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TitleWidget(
-                          title: inboxProvider
-                                  .selectedRequest?.relationship.pets[1].relationships.owner.name ??
+                          title: inboxProvider.selectedRequest?.relationship
+                                  .pets[1].relationships.owner.name ??
                               "No Name",
                           fontSize: 16,
                           fontWeight: semiBoldFont,
@@ -86,9 +87,8 @@ class RequestDetailScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: horizontalPadding.w
-                    ),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: horizontalPadding.w),
                     child: Container(
                       // height: 262.h,
                       width: double.infinity,
@@ -107,9 +107,21 @@ class RequestDetailScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(7.r),
                                 image: DecorationImage(
-                                    image: NetworkImage(
-                                        inboxProvider.selectedRequest!.relationship.pets[1].relationships.pictures.isEmpty ? "" :
-                                        inboxProvider.selectedRequest!.relationship.pets[1].relationships.pictures[0]), fit: BoxFit.cover)),
+                                    image: NetworkImage(inboxProvider
+                                            .selectedRequest!
+                                            .relationship
+                                            .pets[1]
+                                            .relationships
+                                            .pictures
+                                            .isEmpty
+                                        ? ""
+                                        : inboxProvider
+                                            .selectedRequest!
+                                            .relationship
+                                            .pets[1]
+                                            .relationships
+                                            .pictures[0]),
+                                    fit: BoxFit.cover)),
                           ),
                           SizedBox(
                             height: 16.h,
@@ -121,7 +133,7 @@ class RequestDetailScreen extends StatelessWidget {
                               ),
                               Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
@@ -135,8 +147,8 @@ class RequestDetailScreen extends StatelessWidget {
                                     ],
                                   ),
                                   BodyTextPrimaryWithLineHeight(
-                                    text: inboxProvider
-                                        .selectedRequest!.message,
+                                    text:
+                                        inboxProvider.selectedRequest!.message,
                                     fontWeight: mediumFont,
                                     fontSize: 13,
                                     textColor: const Color(0xFF626262),
@@ -149,23 +161,133 @@ class RequestDetailScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10.h,),
+                  SizedBox(
+                    height: 10.h,
+                  ),
                   Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: horizontalPadding.w
-
-                    ),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: horizontalPadding.w),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        BodyTextPrimaryWithLineHeight(text: returnFormattedDateAndTime(inboxProvider.selectedRequest!.createdAt.toString()))
+                        BodyTextPrimaryWithLineHeight(
+                            text: returnFormattedDateAndTime(inboxProvider
+                                .selectedRequest!.createdAt
+                                .toString()))
                       ],
                     ),
-                  )
+                  ),
+                  SizedBox(
+                    height: 16.h,
+                  ),
+                  if (returnIsMaleDogOwner(
+                      inboxProvider.selectedRequest!.relationship.pets))
+                    Padding(
+                      padding:
+                          EdgeInsets.only(left: 70, right: horizontalPadding.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          CustomContainerButton(
+                            onTap: () {},
+                            title: "",
+                            bgColor: mainColor,
+                            horizontalPadding: 10,
+                            verticalPadding: 10,
+                            borderRadius: 16,
+                            widget: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomContainerButton(
+                                  onTap: () {},
+                                  title: "",
+                                  widget: Row(
+                                    children: [
+                                      Expanded(
+                                          child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          BodyTextPrimaryWithLineHeight(
+                                            text:
+                                                "${returnFemalePet(inboxProvider.selectedRequest!.relationship.pets)?.relationships.owner.name ?? 'NA'}",
+                                            textColor: const Color(0xFF181B01),
+                                            fontSize: 10,
+                                          ),
+                                          BodyTextPrimaryWithLineHeight(
+                                            text:
+                                                "${inboxProvider.selectedRequest?.deal} ($nairaSign${returnFormattedAmount(amount: inboxProvider.selectedRequest!.offerAmount.toString())})",
+                                            fontSize: 10,
+                                          )
+                                        ],
+                                      )),
+                                      Container(
+                                        height: 34,
+                                        width: 61,
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: NetworkImage(
+                                                    returnFemalePet(inboxProvider
+                                                                .selectedRequest!
+                                                                .relationship
+                                                                .pets)
+                                                            ?.relationships
+                                                            .pictures[0] ??
+                                                        ""),
+                                                fit: BoxFit.cover)),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 4.h,
+                                ),
+                                const BodyTextPrimaryWithLineHeight(
+                                  text: "You accepted request",
+                                  textColor: white,
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 3.h,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: mainColor,
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(16),
+                                    topLeft: Radius.circular(16),
+                                    bottomLeft: Radius.circular(16))),
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const BodyTextPrimaryWithLineHeight(
+                                    text:
+                                        "Your address details and phone has been shared with the sender of the request.   Get set, they will be here soon",
+                                    textColor: white,
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    )
                 ],
               ),
             )),
-            if (inboxProvider.selectedRequest!.status.toString().toLowerCase() == "pending")
+
+            // if (inboxProvider.selectedRequest!.status
+            //         .toString()
+            //         .toLowerCase() ==
+            //     "pending")
+            // Show this for male dog owner
+            if (returnIsMaleDogOwner(
+                    inboxProvider.selectedRequest!.relationship.pets) &&
+                inboxProvider.selectedRequest?.status == "pending")
               Column(
                 children: [
                   const LongDivider(),

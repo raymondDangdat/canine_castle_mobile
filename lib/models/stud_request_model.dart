@@ -6,7 +6,8 @@ import 'dart:convert';
 
 import 'canines_model.dart';
 
-StudRequestModel studRequestModelFromJson(String str) => StudRequestModel.fromJson(json.decode(str));
+StudRequestModel studRequestModelFromJson(String str) =>
+    StudRequestModel.fromJson(json.decode(str));
 
 class StudRequestModel {
   List<RequestData> data;
@@ -23,13 +24,15 @@ class StudRequestModel {
     required this.success,
   });
 
-  factory StudRequestModel.fromJson(Map<String, dynamic> json) => StudRequestModel(
-    data: List<RequestData>.from(json["data"].map((x) => RequestData.fromJson(x))),
-    links: Links.fromJson(json["links"]),
-    meta: Meta.fromJson(json["meta"]),
-    message: json["message"],
-    success: json["success"],
-  );
+  factory StudRequestModel.fromJson(Map<String, dynamic> json) =>
+      StudRequestModel(
+        data: List<RequestData>.from(
+            json["data"].map((x) => RequestData.fromJson(x))),
+        links: Links.fromJson(json["links"]),
+        meta: Meta.fromJson(json["meta"]),
+        message: json["message"],
+        success: json["success"],
+      );
 }
 
 class RequestData {
@@ -44,37 +47,42 @@ class RequestData {
   Relationship relationship;
   DateTime createdAt;
   DateTime updatedAt;
+  dynamic expectedDateFrom;
+  dynamic expectedDateTo;
   dynamic deletedAt;
 
-  RequestData({
-    required this.id,
-    required this.deal,
-    required this.offerAmount,
-    required this.message,
-    required this.status,
-    required this.studDate,
-    required this.remarks,
-    required this.slug,
-    required this.relationship,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.deletedAt,
-  });
+  RequestData(
+      {required this.id,
+      required this.deal,
+      required this.offerAmount,
+      required this.message,
+      required this.status,
+      required this.studDate,
+      required this.remarks,
+      required this.slug,
+      required this.relationship,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.deletedAt,
+      required this.expectedDateFrom,
+      required this.expectedDateTo});
 
   factory RequestData.fromJson(Map<String, dynamic> json) => RequestData(
-    id: json["id"],
-    deal: json["deal"],
-    offerAmount: json["offer_amount"],
-    message: json["message"],
-    status: json["status"],
-    studDate: json["stud_date"],
-    remarks: json["remarks"],
-    slug: json["slug"],
-    relationship: Relationship.fromJson(json["relationship"]),
-    createdAt: DateTime.parse(json["created_at"]),
-    updatedAt: DateTime.parse(json["updated_at"]),
-    deletedAt: json["deleted_at"],
-  );
+        id: json["id"],
+        deal: json["deal"],
+        offerAmount: json["offer_amount"],
+        message: json["message"],
+        status: json["status"],
+        studDate: json["stud_date"],
+        remarks: json["remarks"],
+        slug: json["slug"],
+        relationship: Relationship.fromJson(json["relationship"]),
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+        expectedDateFrom: json["expected_date_from"],
+        expectedDateTo: json["expected_date_to"],
+        deletedAt: json["deleted_at"],
+      );
 }
 
 class Relationship {
@@ -85,8 +93,8 @@ class Relationship {
   });
 
   factory Relationship.fromJson(Map<String, dynamic> json) => Relationship(
-    pets: List<Pet>.from(json["pets"].map((x) => Pet.fromJson(x))),
-  );
+        pets: List<Pet>.from(json["pets"].map((x) => Pet.fromJson(x))),
+      );
 }
 
 class Pet {
@@ -98,6 +106,7 @@ class Pet {
   dynamic age;
   StudParams? studParams;
   dynamic slug;
+  dynamic isOwner;
   PetRelationships relationships;
 
   Pet({
@@ -109,22 +118,25 @@ class Pet {
     required this.age,
     this.studParams,
     required this.slug,
+    required this.isOwner,
     required this.relationships,
   });
 
   factory Pet.fromJson(Map<String, dynamic> json) => Pet(
-    id: json["id"],
-    name: json["name"],
-    gender: json["gender"],
-    longitude: json["longitude"],
-    latitude: json["latitude"],
-    age: json["age"],
-    studParams: json["stud_params"] == null ? null : StudParams.fromJson(json["stud_params"]),
-    slug: json["slug"],
-    relationships: PetRelationships.fromJson(json["relationships"]),
-  );
+        id: json["id"],
+        name: json["name"],
+        gender: json["gender"],
+        longitude: json["longitude"],
+        latitude: json["latitude"],
+        age: json["age"],
+        isOwner: json['is_owner'],
+        studParams: json["stud_params"] == null
+            ? null
+            : StudParams.fromJson(json["stud_params"]),
+        slug: json["slug"],
+        relationships: PetRelationships.fromJson(json["relationships"]),
+      );
 }
-
 
 class PetRelationships {
   dynamic breed;
@@ -143,14 +155,15 @@ class PetRelationships {
     required this.reviews,
   });
 
-  factory PetRelationships.fromJson(Map<String, dynamic> json) => PetRelationships(
-    breed: json["breed"],
-    state: json["state"],
-    city: json["city"],
-    owner: Owner.fromJson(json["owner"]),
-    pictures: List<String>.from(json["pictures"].map((x) => x)),
-    reviews: Reviews.fromJson(json["reviews"]),
-  );
+  factory PetRelationships.fromJson(Map<String, dynamic> json) =>
+      PetRelationships(
+        breed: json["breed"],
+        state: json["state"],
+        city: json["city"],
+        owner: Owner.fromJson(json["owner"]),
+        pictures: List<String>.from(json["pictures"].map((x) => x)),
+        reviews: Reviews.fromJson(json["reviews"]),
+      );
 }
 
 class Owner {
@@ -169,16 +182,13 @@ class Owner {
   });
 
   factory Owner.fromJson(Map<String, dynamic> json) => Owner(
-    id: json["id"],
-    name: json["name"],
-    phoneNumber: json["phone_number"],
-    username: json["username"],
-    relationships: OwnerRelationships.fromJson(json["relationships"]),
-  );
-
+        id: json["id"],
+        name: json["name"],
+        phoneNumber: json["phone_number"],
+        username: json["username"],
+        relationships: OwnerRelationships.fromJson(json["relationships"]),
+      );
 }
-
-
 
 class OwnerRelationships {
   dynamic country;
@@ -189,15 +199,12 @@ class OwnerRelationships {
     required this.profileImage,
   });
 
-  factory OwnerRelationships.fromJson(Map<String, dynamic> json) => OwnerRelationships(
-    country: json["country"],
-    profileImage: json["profile_image"],
-  );
-
+  factory OwnerRelationships.fromJson(Map<String, dynamic> json) =>
+      OwnerRelationships(
+        country: json["country"],
+        profileImage: json["profile_image"],
+      );
 }
-
-
-
 
 class Reviews {
   dynamic totalRatingAnalysis;
@@ -209,9 +216,7 @@ class Reviews {
   });
 
   factory Reviews.fromJson(Map<String, dynamic> json) => Reviews(
-    totalRatingAnalysis: json["total_rating_analysis"],
-    totalReviewsCount: json["total_reviews_count"],
-  );
+        totalRatingAnalysis: json["total_rating_analysis"],
+        totalReviewsCount: json["total_reviews_count"],
+      );
 }
-
-

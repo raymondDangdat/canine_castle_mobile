@@ -117,6 +117,7 @@ class Relationships {
   dynamic state;
   dynamic coverImage;
   dynamic profileImage;
+  Subscription subscription;
 
   Relationships({
     required this.country,
@@ -124,12 +125,14 @@ class Relationships {
     required this.coverImage,
     required this.profileImage,
     required this.transactionPin,
+    required this.subscription,
   });
 
   factory Relationships.fromJson(Map<String, dynamic> json) => Relationships(
         country: json["country"],
         state: json["state"],
         coverImage: json["coverImage"],
+        subscription: Subscription.fromJson(json["subscription"]),
         transactionPin: json['transaction_pin'],
         profileImage: json["profileImage"],
       );
@@ -153,5 +156,44 @@ class Wallet {
         balance: json["balance"],
         tag: json["tag"],
         currency: json["currency"],
+      );
+}
+
+class Subscription {
+  dynamic isActive;
+  Plan plan;
+  dynamic startDate;
+  dynamic endDate;
+
+  Subscription({
+    required this.isActive,
+    required this.plan,
+    required this.startDate,
+    required this.endDate,
+  });
+
+  factory Subscription.fromJson(Map<String, dynamic> json) => Subscription(
+        isActive: json["is_active"],
+        plan: Plan.fromJson(json["plan"]),
+        startDate: json["start_date"],
+        endDate: json["end_date"],
+      );
+}
+
+class Plan {
+  dynamic id;
+  dynamic name;
+  dynamic slug;
+
+  Plan({
+    required this.id,
+    required this.name,
+    required this.slug,
+  });
+
+  factory Plan.fromJson(Map<String, dynamic> json) => Plan(
+        id: json["id"],
+        name: json["name"],
+        slug: json["slug"],
       );
 }

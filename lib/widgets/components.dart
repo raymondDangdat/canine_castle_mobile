@@ -607,6 +607,8 @@ class CustomDropdownButton extends StatelessWidget {
   final Widget? customWidget;
   final FontWeight fontWeight;
   final double fontSize;
+  final Color bgColor;
+  final double borderRadius;
   const CustomDropdownButton(
       {Key? key,
       required this.title,
@@ -615,6 +617,8 @@ class CustomDropdownButton extends StatelessWidget {
       this.fontWeight = regularFont,
       this.fontSize = 11,
       this.textColor = const Color.fromRGBO(113, 113, 113, 1),
+      this.bgColor = white,
+      this.borderRadius = 8,
       required this.onTap})
       : super(key: key);
 
@@ -628,8 +632,8 @@ class CustomDropdownButton extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
             border: Border.all(color: borderColor),
-            color: white,
-            borderRadius: BorderRadius.circular(8.r)),
+            color: bgColor,
+            borderRadius: BorderRadius.circular(borderRadius.r)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

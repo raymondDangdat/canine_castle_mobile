@@ -23,13 +23,13 @@ class _InboxScreenState extends State<InboxScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final inboxProvider =
-      Provider.of<InboxProvider>(context, listen: false);
+      final inboxProvider = Provider.of<InboxProvider>(context, listen: false);
       inboxProvider.getStudRequests(context: context);
     });
 
     setState(() {});
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,21 +39,21 @@ class _InboxScreenState extends State<InboxScreen> {
         return Column(
           children: [
             const TopPadding(),
-            const CustomAppbar(title: "Requests",
+            const CustomAppbar(
+              title: "Requests",
               showArrowBack: false,
             ),
             SizedBox(
               height: 24.h,
             ),
             Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: horizontalPadding.w
-              ),
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding.w),
               child: Row(
                 children: [
                   CustomContainerButton(
                     onTap: () {
-                      inboxProvider.updateIsCrossDealsTab(newValue: crossDealTab);
+                      inboxProvider.updateIsCrossDealsTab(
+                          newValue: crossDealTab);
                     },
                     title: crossDealTab,
                     horizontalPadding: 12,
@@ -91,9 +91,10 @@ class _InboxScreenState extends State<InboxScreen> {
                 ],
               ),
             ),
-             SizedBox(height: 28.h,),
-             if(inboxProvider.inboxTab == crossDealTab)
-             const RequestsTab(),
+            SizedBox(
+              height: 28.h,
+            ),
+            if (inboxProvider.inboxTab == crossDealTab) const RequestsTab(),
           ],
         );
       })),

@@ -11,6 +11,7 @@ import '../resources/constants/string_constants.dart';
 import '../resources/navigation_utils.dart';
 import '../services/api_client.dart';
 import '../ui/confirm_email/confirm_email_screen.dart';
+import '../utils/functions.dart';
 
 class AuthProvider extends ChangeNotifier {
   bool _isDogOwner = true;
@@ -81,7 +82,7 @@ class AuthProvider extends ChangeNotifier {
     bool isPasscode = false,
   }) async {
     /// Clear previous user info
-    // await clearHiveData();
+    await clearHiveData();
 
     bool isLoggedIn = false;
     final connected = await connectionChecker();

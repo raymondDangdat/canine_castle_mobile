@@ -49,16 +49,15 @@ Future showBreedingRequestModal(BuildContext importedContext) {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      height: 500,
+                    SizedBox(
+                        height: 500,
                         child: Column(
                           children: [
                             SizedBox(
                               height: 20.h,
                             ),
                             Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const CustomText(
                                   text: 'Breeding request',
@@ -85,7 +84,8 @@ Future showBreedingRequestModal(BuildContext importedContext) {
                                       clipBehavior: Clip.antiAlias,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
-                                        borderRadius: BorderRadius.circular(11.r),
+                                        borderRadius:
+                                            BorderRadius.circular(11.r),
                                         boxShadow: const [
                                           BoxShadow(
                                             color: Color(0x0A101928),
@@ -133,7 +133,8 @@ Future showBreedingRequestModal(BuildContext importedContext) {
                                                   children: [
                                                     BodyTextPrimaryWithLineHeight(
                                                       text: canineProvider
-                                                          .selectedFemaleDog!.name,
+                                                          .selectedFemaleDog!
+                                                          .name,
                                                       fontWeight: semiBoldFont,
                                                       textColor: black,
                                                     ),
@@ -146,18 +147,21 @@ Future showBreedingRequestModal(BuildContext importedContext) {
                                                           .relationships
                                                           .breed,
                                                       fontWeight: semiBoldFont,
-                                                      textColor: const Color.fromRGBO(
-                                                          130, 130, 130, 1),
+                                                      textColor:
+                                                          const Color.fromRGBO(
+                                                              130, 130, 130, 1),
                                                     ),
                                                     const SizedBox(
                                                       height: 3,
                                                     ),
                                                     BodyTextPrimaryWithLineHeight(
                                                       text: canineProvider
-                                                          .selectedFemaleDog!.gender,
+                                                          .selectedFemaleDog!
+                                                          .gender,
                                                       fontWeight: semiBoldFont,
-                                                      textColor: const Color.fromRGBO(
-                                                          130, 130, 130, 1),
+                                                      textColor:
+                                                          const Color.fromRGBO(
+                                                              130, 130, 130, 1),
                                                     ),
                                                   ],
                                                 )
@@ -178,7 +182,8 @@ Future showBreedingRequestModal(BuildContext importedContext) {
                                     ),
                                     CustomContainerButton(
                                       onTap: () {
-                                        showSelectCrossDealModal(importedContext);
+                                        showSelectCrossDealModal(
+                                            importedContext);
                                       },
                                       title: "",
                                       bgColor: const Color(0xFFF9F9F9),
@@ -192,12 +197,15 @@ Future showBreedingRequestModal(BuildContext importedContext) {
                                             children: [
                                               BodyTextPrimaryWithLineHeight(
                                                 text: canineProvider
-                                                        .selectedCrossDeal?.type ??
+                                                        .selectedCrossDeal
+                                                        ?.type ??
                                                     "Select Cross Deal",
-                                                textColor: const Color(0xFF0C0C0C),
+                                                textColor:
+                                                    const Color(0xFF0C0C0C),
                                                 fontWeight: semiBoldFont,
                                               ),
-                                              if (canineProvider.selectedCrossDeal !=
+                                              if (canineProvider
+                                                      .selectedCrossDeal !=
                                                   null)
                                                 BodyTextPrimaryWithLineHeight(
                                                     text: canineProvider
@@ -219,7 +227,8 @@ Future showBreedingRequestModal(BuildContext importedContext) {
                                         padding: EdgeInsets.only(bottom: 14.h),
                                         child: InkWell(
                                           onTap: () {
-                                            canineProvider.updateShowAddOffer(true);
+                                            canineProvider
+                                                .updateShowAddOffer(true);
                                           },
                                           child: Row(
                                             children: [
@@ -229,8 +238,8 @@ Future showBreedingRequestModal(BuildContext importedContext) {
                                               ),
                                               const BodyTextPrimaryWithLineHeight(
                                                 text: "Add your offer",
-                                                textColor:
-                                                    Color.fromRGBO(10, 10, 11, 1),
+                                                textColor: Color.fromRGBO(
+                                                    10, 10, 11, 1),
                                               ),
                                             ],
                                           ),
@@ -238,7 +247,8 @@ Future showBreedingRequestModal(BuildContext importedContext) {
                                       ),
                                     if (canineProvider.showAddOffer)
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           const LabelWidget(
                                               label: "Enter your offer"),
@@ -247,7 +257,8 @@ Future showBreedingRequestModal(BuildContext importedContext) {
                                               Expanded(
                                                 child: CustomField(
                                                   "50,00",
-                                                  canineProvider.yourOfferController,
+                                                  canineProvider
+                                                      .yourOfferController,
                                                   isCapitalizeSentence: false,
                                                   type: const TextInputType
                                                       .numberWithOptions(
@@ -257,16 +268,21 @@ Future showBreedingRequestModal(BuildContext importedContext) {
                                                     if (value != null) {
                                                       if (value.isNotEmpty) {
                                                         var text = NumberFormat
-                                                                .decimalPattern('en')
+                                                                .decimalPattern(
+                                                                    'en')
                                                             .format(int.parse(
-                                                                value.replaceAll(
-                                                                    ',', '')));
+                                                                value
+                                                                    .replaceAll(
+                                                                        ',',
+                                                                        '')));
                                                         canineProvider
-                                                            .yourOfferController
-                                                            .value = TextEditingValue(
+                                                                .yourOfferController
+                                                                .value =
+                                                            TextEditingValue(
                                                           text: text,
                                                           selection:
-                                                              TextSelection.collapsed(
+                                                              TextSelection
+                                                                  .collapsed(
                                                             offset: text.length,
                                                           ),
                                                         );
@@ -288,6 +304,34 @@ Future showBreedingRequestModal(BuildContext importedContext) {
                                       height: 24.h,
                                     ),
                                     const LabelWidget(
+                                        label: "Select availability"),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            child: CustomDropdownButton(
+                                                title:
+                                                    "From ${returnFormattedDate(canineProvider.selectedFromDate.toString())}",
+                                                onTap: () {
+                                                  canineProvider
+                                                      .selectFromDate(context);
+                                                })),
+                                        SizedBox(
+                                          width: 5.w,
+                                        ),
+                                        Expanded(
+                                            child: CustomDropdownButton(
+                                                title:
+                                                    "To ${returnFormattedDate(canineProvider.selectedToDate.toString())}",
+                                                onTap: () {
+                                                  canineProvider
+                                                      .selectToDate(context);
+                                                })),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 24.h,
+                                    ),
+                                    const LabelWidget(
                                         label: "Enter message (optional)"),
                                     Row(
                                       children: [
@@ -303,12 +347,13 @@ Future showBreedingRequestModal(BuildContext importedContext) {
                                       height: 24.h,
                                     ),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Expanded(
                                             child: MainButton(continueTo,
-                                                fontSize: 14, () async{
-                                              showCrossDealDialog(importedContext);
+                                                fontSize: 14, () async {
+                                          showCrossDealDialog(importedContext);
                                         })),
                                       ],
                                     ),
@@ -320,8 +365,7 @@ Future showBreedingRequestModal(BuildContext importedContext) {
                               ),
                             ),
                           ],
-                        )
-                    ),
+                        )),
                   ],
                 ),
               );

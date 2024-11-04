@@ -1,4 +1,5 @@
 import 'package:canine_castle_mobile/resources/constants/image_constant.dart';
+import 'package:canine_castle_mobile/ui/bottom_nav_screens/inbox/widgets/modals/pick_availability_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,8 +16,24 @@ import '../../../../../widgets/custom_snack_back.dart';
 import '../../../../../widgets/long_divider.dart';
 
 Future showHowStudCrossingWorksModal(
-    BuildContext importedContext,
-    ) {
+  BuildContext importedContext,
+) {
+  List<String> getDatesBetween(String start, String end) {
+    DateTime startDate = DateTime.parse(start);
+    DateTime endDate = DateTime.parse(end);
+    List<String> dates = [];
+
+    for (DateTime date = startDate;
+        date.isBefore(endDate.add(const Duration(days: 1)));
+        date = date.add(Duration(days: 1))) {
+      dates.add(date.toIso8601String().split('T')[0]);
+    }
+
+    debugPrint("Dates:: ${dates[0]}");
+
+    return dates;
+  }
+
   return showModalBottomSheet<void>(
     isScrollControlled: true,
     context: importedContext,
@@ -39,11 +56,13 @@ Future showHowStudCrossingWorksModal(
               ),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: horizontalPadding.w),
-                child:
-                Consumer<InboxProvider>(builder: (ctx, inboxProvider, child) {
+                child: Consumer<InboxProvider>(
+                    builder: (ctx, inboxProvider, child) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     if (inboxProvider.resMessage != '') {
-                      customSnackBar(context, inboxProvider.resMessage, isError: inboxProvider.isErrorMessage);
+                      customSnackBar(context, inboxProvider.resMessage,
+                          isError: inboxProvider.isErrorMessage);
+
                       ///Clear the response message to avoid duplicate
                       inboxProvider.clear();
                     }
@@ -65,34 +84,34 @@ Future showHowStudCrossingWorksModal(
                             fontSize: 23,
                             fontWeight: semiBoldFont,
                           ),
-
                           InkWell(
-                            onTap: (){
-                              Navigator.pop(context);
-                            },
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
                               child: SvgPicture.asset(closeIconSvg)),
-
                         ],
                       ),
-                      SizedBox(height: 32.h,),
+                      SizedBox(
+                        height: 32.h,
+                      ),
                       Column(
                         children: [
                           const HowItWorksItem(
                             label: "Accepting a request",
                             mainText:
-                            "Upon accepting a request, your location details and phone number will be shared with the sender of the request",
+                                "Upon accepting a request, your location details and phone number will be shared with the sender of the request",
                             sn: "1",
                           ),
                           const HowItWorksItem(
                             label: "Getting a secured payment",
                             mainText:
-                            "The payment for a cross-deal is securely held by Canine castle until the sender confirms deal completion . ",
+                                "The payment for a cross-deal is securely held by Canine castle until the sender confirms deal completion . ",
                             sn: "2",
                           ),
                           const HowItWorksItem(
                             label: "Payment Release",
                             mainText:
-                            "Payment is sent to your  wallet 24 hours after confirmation, provided no issues are reported.",
+                                "Payment is sent to your  wallet 24 hours after confirmation, provided no issues are reported.",
                             sn: "3",
                           ),
                           SizedBox(
@@ -105,46 +124,59 @@ Future showHowStudCrossingWorksModal(
                           SizedBox(
                             height: 20.h,
                           ),
-
-
-                          inboxProvider.updatingStudRequest ? const Center(
-                            child: CupertinoActivityIndicator(),
-                          ) : Padding(
-                            padding:
-                            EdgeInsets.symmetric(horizontal: horizontalPadding.w),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: MainButton(
-                                    decline,
-                                        () async{
-                                          bool isAccepted = await inboxProvider.updateStudRequest(context: context, status: "declined");
-                                          if(isAccepted){
-                                            inboxProvider.getStudRequests(context: context);
-                                            Navigator.pop(context);
-                                            Navigator.pop(importedContext);
-                                          }
+                          inboxProvider.updatingStudRequest
+                              ? const Center(
+                                  child: CupertinoActivityIndicator(),
+                                )
+                              : Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: horizontalPadding.w),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: MainButton(
+                                          decline,
+                                          () async {
+                                            bool isAccepted =
+                                                await inboxProvider
+                                                    .updateStudRequest(
+                                                        context: context,
+                                                        status: "declined");
+                                            if (isAccepted) {
+                                              inboxProvider.getStudRequests(
+                                                  context: context);
+                                              Navigator.pop(context);
+                                              Navigator.pop(importedContext);
+                                            }
+                                          },
+                                          color: const Color(0xFFF9F0E8),
+                                          textColor: mainColor,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 17.w,
+                                      ),
+                                      Expanded(
+                                          child: MainButton(
+                                        next,
+                                        () async {
+                                          List<String> dateList =
+                                              getDatesBetween(
+                                                  inboxProvider.selectedRequest!
+                                                      .expectedDateFrom,
+                                                  inboxProvider.selectedRequest!
+                                                      .expectedDateTo);
+                                          Navigator.pop(context);
+                                          inboxProvider
+                                              .updateSelectedAvailableDate("");
+                                          showHowStudCrossingAvailabilityModal(
+                                              importedContext,
+                                              availableDates: dateList);
                                         },
-                                    color: const Color(0xFFF9F0E8),
-                                    textColor: mainColor,
+                                      )),
+                                    ],
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 17.w,
-                                ),
-                                Expanded(
-                                    child: MainButton(
-                                      accept,
-                                          () async{
-                                        bool isAccepted = await inboxProvider.updateStudRequest(context: context, status: "accepted");
-                                        if(isAccepted){
-                                          Navigator.pop(context);
-                                        }
-                                      },
-                                    )),
-                              ],
-                            ),
-                          ),
                           SizedBox(
                             height: bottomPadding.h,
                           )
@@ -164,9 +196,9 @@ class HowItWorksItem extends StatelessWidget {
   final String sn;
   const HowItWorksItem(
       {super.key,
-        required this.label,
-        required this.mainText,
-        required this.sn});
+      required this.label,
+      required this.mainText,
+      required this.sn});
 
   @override
   Widget build(BuildContext context) {
@@ -192,21 +224,21 @@ class HowItWorksItem extends StatelessWidget {
             ),
             Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    BodyTextPrimaryWithLineHeight(
-                      text: label,
-                      fontWeight: mediumFont,
-                      textColor: blackTextColor,
-                    ),
-                    BodyTextPrimaryWithLineHeight(
-                      text: mainText,
-                      fontSize: 13,
-                      textColor: blackTextColor,
-                      fontWeight: regularFont,
-                    ),
-                  ],
-                )),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                BodyTextPrimaryWithLineHeight(
+                  text: label,
+                  fontWeight: mediumFont,
+                  textColor: blackTextColor,
+                ),
+                BodyTextPrimaryWithLineHeight(
+                  text: mainText,
+                  fontSize: 13,
+                  textColor: blackTextColor,
+                  fontWeight: regularFont,
+                ),
+              ],
+            )),
           ],
         ),
         SizedBox(

@@ -25,16 +25,23 @@ class TileWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CustomText(
-                text: leading,
-                textColor: ashShade,
-                fontSize: 13,
+              Expanded(
+                flex: 2,
+                child: CustomText(
+                  text: leading,
+                  textColor: ashShade,
+                  fontSize: 13,
+                ),
               ),
-              CustomText(
-                text: trailing,
-                textColor: textColor,
-                fontSize: 13,
-                fontWeight: mediumFont,
+              Expanded(
+                flex: 3,
+                child: BodyTextPrimaryWithLineHeight(
+                  text: trailing,
+                  textColor: textColor,
+                  fontSize: 13,
+                  alignEnd: true,
+                  fontWeight: mediumFont,
+                ),
               ),
             ],
           ),
